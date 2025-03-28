@@ -1,0 +1,10 @@
+version: "0.1"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "80:80"
