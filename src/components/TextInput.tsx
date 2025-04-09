@@ -11,14 +11,14 @@ const TextInput = (props: TextInputProps) => {
     const {label, type="text", placeholder, register} = props;
 
     return (
-        <>
-        <label>{label}</label>
-        <input
-            type={type}
-            {...register}
-            placeholder={placeholder}
-        />
-        </>
+        <div>
+            <label>{label}</label>
+            <input
+                type={type}
+                {...register}
+                placeholder={placeholder}
+            />
+        </div>
     );
 };
 
