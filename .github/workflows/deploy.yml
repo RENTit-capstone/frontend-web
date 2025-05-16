@@ -21,6 +21,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           name: artifact
+          path: ./
       - name: Install Packages
         run: npm install
       - name: Build page
