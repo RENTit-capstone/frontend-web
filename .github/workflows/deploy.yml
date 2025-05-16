@@ -21,13 +21,12 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           name: artifact
-          path: public
       - name: Install Packages
         run: npm install
       - name: Build page
         run: npm run build
       - name: Copy Build Dir
-        run: cp -a dist/. public/
+        run: cp -a dist/. ./
       - name: Print working directory
         run: pwd
       - name: List All files
@@ -38,4 +37,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
         run: |
-          aws s3 --endpoint-url=https://kr.object.ncloudstorage.com cp --recursive public/ s3://rentit-bucket
+          aws s3 --endpoint-url=https://kr.object.ncloudstorage.com cp --recursive ./ s3://rentit-bucket
