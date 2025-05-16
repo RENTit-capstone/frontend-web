@@ -21,13 +21,13 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           name: artifact
-          path: ./
+          path: public
       - name: Install Packages
         run: npm install
       - name: Build page
         run: npm run build
       - name: Copy Build Dir
-        run: cp -a dist/. ./
+        run: cp -a dist/. public/
       - name: Print working directory
         run: pwd
       - name: List All files
