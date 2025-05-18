@@ -3,8 +3,6 @@ name: CI-CD
 on:
   push:
     branches: [ "main", "dev", "test/ci-cd" ]
-  pull_request:
-    branches: [ "main", "dev", "test/ci-cd" ]
     
 jobs:
   deploy:
