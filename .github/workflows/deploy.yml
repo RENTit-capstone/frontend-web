@@ -40,5 +40,7 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
 
       - name: Upload public/ to NCP Object Storage
+        env:
+          AWS_RETRY_MODE: legacy
         run: |
           aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp public/ s3://rentit-bucket/ --recursive --acl public-read
