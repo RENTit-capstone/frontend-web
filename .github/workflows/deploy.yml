@@ -1,0 +1,45 @@
+name: CI-CD
+
+on:
+  push:
+    branches: [ "main", "dev", "test/ci-cd" ]
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x']
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          name: artifact
+          path: public
+      - name: Install Packages
+        run: npm install
+      - name: Build page
+        run: npm run build
+      - name: Copy Build Dir
+        run: cp -a dist/. public/
+      - name: Print working directory
+        run: pwd
+      - name: List All files
+        run: ls -al
+     
+      - name: Set up AWS credentials for NCP
+        run: |
+          aws --version
+          echo "Setting AWS environment variables"
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Upload public/ to NCP Object Storage
+        env:
+          AWS_REQUEST_CHECKSUM_CALCULATION: WHEN_REQUIRED
+        run: |
+          aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp public/ s3://rentit-bucket/ --recursive --acl public-read
