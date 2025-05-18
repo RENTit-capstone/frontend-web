@@ -33,10 +33,12 @@ jobs:
       - name: List All files
         run: ls -al
      
-      - name: Upload to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      - name: Set up AWS credentials for NCP
+        run: |
+          echo "Setting AWS environment variables"
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Upload public/ to NCP Object Storage
         run: |
           aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp public/ s3://rentit-bucket/ --recursive --acl public-read
-
