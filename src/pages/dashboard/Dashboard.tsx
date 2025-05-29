@@ -2,7 +2,7 @@ import React from "react";
 
 const Dashboard = () => {
     return (
-        <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="p-6 bg-gray-50 min-h-screen text-black">
             <h1 className="text-2xl font-bold mb-6">RENTit 관리자 대시보드</h1>
             {/* 메인 그리드 */}
             <div className="grid grid-cols-3 gap-6">
