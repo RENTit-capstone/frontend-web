@@ -1,5 +1,5 @@
 import React from "react";
-import Tag from "../ui/Tag";
+import Tag from "../comman/Tag";
 
 const dummyData = [
     { id: 1, user: '김민수', item: '노트북', date: '2025-05-20', status: '대여중' },
