@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from '../../components/layout/Sidebar';
 import ChartCard from "../../components/cards/ChartCard";
+import RentalTableCard from "../../components/cards/RentalTableCard";
 
 const Dashboard = () => {
     return (
@@ -18,9 +19,9 @@ const Dashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-2 bg-white p-4 rounded shadow">
+                    <div className="col-span-2">
                         [대여 관리 테이블]
-                        <ChartCard />
+                        <RentalTableCard />
                     </div>
                     <div className="col-span-1 bg-white p-4 rounded shadow">
                         [문의 조회 테이블]
