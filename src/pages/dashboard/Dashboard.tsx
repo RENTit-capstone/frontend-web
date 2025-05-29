@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from '../../components/layout/Sidebar';
 import ChartCard from "../../components/cards/ChartCard";
 import RentalTableCard from "../../components/cards/RentalTableCard";
+import InquiryTableCard from "../../components/cards/InquiryTableCard";
 
 const Dashboard = () => {
     return (
@@ -25,7 +26,7 @@ const Dashboard = () => {
                     </div>
                     <div className="col-span-1 bg-white p-4 rounded shadow">
                         [문의 조회 테이블]
-                        <ChartCard />
+                        <InquiryTableCard />
                     </div>
                 </div>
             </main>
