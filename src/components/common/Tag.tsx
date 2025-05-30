@@ -1,7 +1,8 @@
 import React from 'react';
+import type { RentalStatus } from '../../types/types';
 
 interface TagProps {
-    status: '대여가능' | '대여중' | '연체' | '반납중' | '대여신청';
+    status: RentalStatus;
 }
 
 const statusColors: Record<TagProps['status'], string> = {

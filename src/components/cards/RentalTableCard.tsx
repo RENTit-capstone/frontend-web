@@ -1,7 +1,14 @@
 import React from "react";
-import Tag from "../comman/Tag";
+import Tag from "../common/Tag";
+import type { RentalStatus } from "../../types/types";
 
-const dummyData = [
+const dummyData: {
+    id: number;
+    user: string;
+    item: string;
+    date: string;
+    status: RentalStatus;
+}[] = [
     { id: 1, user: '김민수', item: '노트북', date: '2025-05-20', status: '대여중' },
     { id: 2, user: '이영희', item: '빔프로젝터', date: '2025-05-18', status: '반납중' },
     { id: 3, user: '박지후', item: '캠코더', date: '2025-05-15', status: '연체' },
@@ -12,7 +19,7 @@ const RentalTableCard = () => {
         <div className="bg-white p-4 rounded shadow">
             {/* 상단 텍스트 + 링크 */}
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-1g font-semibold">대여 관리</h2>
+                <h2 className="text-lg font-semibold">대여 관리</h2>
                 <a href="#" className="text-sm text-blue-500 hover:underline">
                     전체 보기 →
                 </a>
@@ -31,13 +38,13 @@ const RentalTableCard = () => {
                 </thead>
                 <tbody>
                     {dummyData.map(({ id, user, item, date, status }) => (
-                        <tr key={id} className="border-b hover:bg-gray-50">
+                        <tr key={id} className="border-b hover:bg-gray-50 text-gray-700">
                             <td className="py-2">{id}</td>
-                            <td className="py-2">{user}</td>
-                            <td className="py-2">{item}</td>
+                            <td className="py-2 font-medium">{user}</td>
+                            <td className="py-2 font-medium">{item}</td>
                             <td className="py-2">{date}</td>
                             <td className="py-2">
-                                <Tag status={status as any} />
+                                <Tag status={status} />
                             </td>
                         </tr>
                     ))}
