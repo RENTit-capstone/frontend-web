@@ -3,6 +3,7 @@ import Sidebar from '../../components/layout/Sidebar';
 import SummaryCardGroup from "../../components/cards/SummaryCardGroup";
 import SummaryStatCard from "../../components/cards/SummaryStatCard";
 import ChartCard from "../../components/cards/ChartCard";
+import ItemStateChart from "../../components/cards/ItemStateChart";
 import RentalTableCard from "../../components/cards/RentalTableCard";
 import InquiryTableCard from "../../components/cards/InquiryTableCard";
 
@@ -19,9 +20,9 @@ const Dashboard = () => {
 
                 {/* 중간 통계 영역 */}
                 <div className="grid grid-cols-3 gap-6 mb-6">
-                    <div className="col-span-2">
-                        <ChartCard />
-                    </div>
+                    <ChartCard />
+                    <ItemStateChart />
+                    {/* SummaryStatCard는 추후 그래프 도입 시 제거하기 */}
                     <div className="col-span-1">
                         <SummaryStatCard
                             title="일간/주간 대여량"
