@@ -15,7 +15,7 @@ const ItemPage = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold mb-6">물품 관리</h1>
                     <button className="text-sm text-blue-500">
-                        + 대여 수기 등록
+                        + 물품 등록
                     </button>
                 </div>
 
