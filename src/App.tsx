@@ -1,34 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import SignUp from './pages/login/SignUp';
+import Dashboard from './pages/dashboard/Dashboard';
+
+const Placeholder = ({ name }: { name: string }) => (
+  <div className="p-10 text-x1 font-semibold text-gray-500">{name} 페이지는 준비 중입니다.</div>
+);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/rental" element={<Placeholder name="대여 관리" />} />
+        <Route path="/items" element={<Placeholder name="물품 관리" />} />
+        <Route path="/inquiry" element={<Placeholder name="문의" />} />
+        <Route path="/stats" element={<Placeholder name="사용자 통계" />} />
+      </Routes>
+    </Router>
   )
 }
 
