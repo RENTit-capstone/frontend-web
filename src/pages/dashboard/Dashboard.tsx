@@ -1,4 +1,3 @@
-import React from "react";
 import Sidebar from '../../components/layout/Sidebar';
 import SummaryCardGroup from "../../components/cards/SummaryCardGroup";
 import SummaryStatCard from "../../components/cards/SummaryStatCard";
