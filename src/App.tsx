@@ -6,10 +6,6 @@ import RentalPage from './pages/rental/RentalPage';
 import ItemPage from './pages/items/ItemPage';
 import InquiryPage from './pages/inquiries/InquiryPage';
 
-const Placeholder = ({ name }: { name: string }) => (
-  <div className="p-10 text-x1 font-semibold text-gray-500">{name} 페이지는 준비 중입니다.</div>
-);
-
 function App() {
   return (
     <Router>
