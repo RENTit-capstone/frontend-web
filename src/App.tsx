@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import SignUp from './pages/login/SignUp';
 import Dashboard from './pages/dashboard/Dashboard';
+import RentalPage from './pages/rental/RentalPage';
 import ItemPage from './pages/items/ItemPage';
 import InquiryPage from './pages/inquiries/InquiryPage';
 
@@ -15,7 +16,7 @@ function App() {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/rental" element={<Placeholder name="대여 관리" />} />
+        <Route path="/rental" element={<RentalPage />} />
         <Route path="/items" element={<ItemPage />} />
         <Route path="/inquiry" element={<InquiryPage />} />
         <Route path="/stats" element={<Placeholder name="사용자 통계" />} />
