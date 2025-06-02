@@ -26,7 +26,7 @@ const UserPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dummyUsers.map(({ id, name, email, role, status }) => (
+                            {dummyUsers.map(({ id, name, email }) => (
                                 <tr key={id} className="border-b hover:bg-gray-50">
                                     <td className="py-2">{id}</td>
                                     <td className="py-2">{name}</td>
