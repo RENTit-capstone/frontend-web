@@ -1,8 +1,57 @@
-import axios from "axios";
+import axios from 'axios';
+import useAuthStore from '../stores/useAuthStore';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true,
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+export const axiosNoInterceptor = axios.create({
+    baseURL: BASE_URL,
 });
 
-export default api;
+export const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+});
+
+const getNewToken = async () => {
+    const { accessToken, refreshToken } = useAuthStore.getState();
+    const payload = { accessToken, refreshToken };
+    const response = await axiosNoInterceptor.post('/api/v1/auth/login/refresh', payload);
+
+    if (response.data.success) {
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken, memberId } = response.data.data;
+        useAuthStore.getState().setTokens(newAccessToken, newRefreshToken, memberId);
+        return newAccessToken;
+    } else {
+        useAuthStore.getState().clearTokens();
+        throw new Error(response.data.message);
+    }
+};
+
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = useAuthStore.getState().accessToken;
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        config.headers['Content-Type'] = 'application/json';
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if (error.response?.status === 403 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const newAccessToken = await getNewToken();
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                return axiosInstance(originalRequest);
+            } catch (err) {
+                return Promise.reject(err);
+            }
+        }
+        return Promise.reject(error);
+    }
+);
