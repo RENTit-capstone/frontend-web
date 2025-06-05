@@ -11,5 +11,3 @@ export type SignUpType = {
     stdId: string;
     grade: string;
 }
-
-export type RentalStatus = '대여가능' | '대여중' | '연체' | '반납중' | '대여신청';
