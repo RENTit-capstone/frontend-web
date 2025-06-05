@@ -1,20 +1,39 @@
-import React from "react";
+import { useEffect, useState } from 'react';
+import { getData } from "../../api/requests";
 import Tag from "../common/Tag";
-import type { RentalStatus } from "../../types/types";
+import { translateStatus } from '../common/translateStatus';
 
-const dummyData: {
-    id: number;
-    user: string;
-    item: string;
-    date: string;
-    status: RentalStatus;
-}[] = [
-    { id: 1, user: '김민수', item: '노트북', date: '2025-05-20', status: '대여중' },
-    { id: 2, user: '이영희', item: '빔프로젝터', date: '2025-05-18', status: '반납중' },
-    { id: 3, user: '박지후', item: '캠코더', date: '2025-05-15', status: '연체' },
-];
+interface Rental {
+    rentalId: number;
+    itemName: string;
+    renterName: string;
+    requestDate: string;
+    status: string;
+}
 
 const RentalTableCard = () => {
+    const [rentals, setRentals] = useState<Rental[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchRentals = async () => {
+            try {
+                setLoading(true);
+                const data = await getData(
+                    `/api/v1/admin/rentals?statuses=APPROVED&statues=REQUESTED&page=0&size=5&sortrequestDate,desc`
+                );
+                setRentals(data.content);
+            } catch (err) {
+                setError('대여 목록을 불러오지 못했습니다.');
+                console.log("Error occured in fetching rental list: ", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchRentals();
+    }, []);
+
     return (
         <div className="bg-white p-4 rounded shadow">
             {/* 상단 텍스트 + 링크 */}
@@ -26,30 +45,37 @@ const RentalTableCard = () => {
             </div>
 
             {/* 테이블 */}
-            <table className="w-full text-sm text-left">
-                <thead className="text-gray-500 border-b">
-                    <tr>
-                        <th className="py-2">번호</th>
-                        <th className="py-2">사용자</th>
-                        <th className="py-2">물품</th>
-                        <th className="py-2">대여일자</th>
-                        <th className="py-2">상태</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dummyData.map(({ id, user, item, date, status }) => (
-                        <tr key={id} className="border-b hover:bg-gray-50 text-gray-700">
-                            <td className="py-2">{id}</td>
-                            <td className="py-2 font-medium">{user}</td>
-                            <td className="py-2 font-medium">{item}</td>
-                            <td className="py-2">{date}</td>
-                            <td className="py-2">
-                                <Tag status={status} />
-                            </td>
+            {loading ? (
+                <p className="text-sm text-gray-500">로딩 중...</p>
+            ) : error ? (
+                <p className="text-sm text-red-500">{error}</p>
+            ) : (
+                <table className="w-full text-sm text-left">
+                    <thead className="text-gray-500 border-b">
+                        <tr>
+                            <th className="py-2">번호</th>
+                            <th className="py-2">사용자</th>
+                            <th className="py-2">물품</th>
+                            <th className="py-2">요청일자</th>
+                            <th className="py-2">상태</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {rentals.map(({ rentalId, itemName, renterName, requestDate, status }) => (
+                            <tr key={rentalId} className="border-b hover:bg-gray-50 text-gray-700">
+                                <td className="py-2">{rentalId}</td>
+                                <td className="py-2 font-medium">{renterName}</td>
+                                <td className="py-2 font-medium">{itemName}</td>
+                                <td className="py-2">{new Date(requestDate).toLocaleDateString()}</td>
+                                <td className="py-2">
+                                    <Tag status={translateStatus(status)} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+            
         </div>
     );
 };
