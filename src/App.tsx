@@ -7,6 +7,7 @@ import RentalPage from './pages/rental/RentalPage';
 import ItemPage from './pages/items/ItemPage';
 import InquiryPage from './pages/inquiries/InquiryPage';
 import useAuthStore from './stores/useAuthStore';
+import { JSX } from 'react';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { accessToken } = useAuthStore();
@@ -14,19 +15,23 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 function App() {
+  const { accessToken } = useAuthStore();
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={
+          accessToken ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+        } />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
 
         {/* 보호된 라우트 */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/stats" element={<UserPage />} />
-        <Route path="/rental" element={<RentalPage />} />
-        <Route path="/items" element={<ItemPage />} />
-        <Route path="/inquiry" element={<InquiryPage />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/stats" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+        <Route path="/rental" element={<ProtectedRoute><RentalPage /></ProtectedRoute>} />
+        <Route path="/items" element={<ProtectedRoute><ItemPage /></ProtectedRoute>} />
+        <Route path="/inquiry" element={<ProtectedRoute><InquiryPage /></ProtectedRoute>} />
       </Routes>
     </Router>
   )

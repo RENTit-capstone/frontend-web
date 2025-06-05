@@ -1,14 +1,26 @@
 import { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/requests';
+import useAuthStore from '../../stores/useAuthStore';
 
 const LoginPage = () => {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Login payload:', { email, password });
+        try {
+            const res = await login(email, password);
+            const { accessToken, refreshToken, memberId } = res.data;
+            useAuthStore.getState().setTokens(accessToken, refreshToken, memberId);
+            navigate('/dashboard');
+        } catch (err) {
+            console.error('로그인 실패: ', err);
+            setErrorMsg('이메일 또는 비밀번호가 올바르지 않습니다.');
+        }
     };
 
     return (
@@ -18,6 +30,11 @@ const LoginPage = () => {
                 className="bg-white p-8 rouded shadow-md w-96 space-y-4"
             >
                 <h2 className="text-2xl font-semibold text-center">RENTit 관리자 로그인</h2>
+                
+                {errorMsg && (
+                    <div className="text-red-600 text-sm text-center">{errorMsg}</div>
+                )}
+
                 <input 
                     type="email"
                     placeholder="이메일"
