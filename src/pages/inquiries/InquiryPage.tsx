@@ -1,12 +1,35 @@
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
+import { getData } from "../../api/requests";
+import dayjs from "dayjs";
 
-const dummyInquiries = [
-    { id: 101, title: '대여 기간 변경 문의', createdAt: '2025-05-21' },
-    { id: 102, title: '물품 상태 이상 신고', createdAt: '2025-05-20' },
-    { id: 103, title: '회원정보 수정 관련', createdAt: '2025-05-18' },
-];
+interface Inquiry {
+    inquiryId: number;
+    title: string;
+    createdAt: string;
+}
 
 const InquiryPage = () => {
+    const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchInquiries = async () => {
+            try {
+                const data = await getData("/api/v1/admin/inquiries?processed=false&page=0&size=20");
+                setInquiries(data.content || []);
+            } catch (err) {
+                setError("문의 목록을 불러오는 데 실패했습니다.");
+                console.error("InquiryPage fetch error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchInquiries();
+    }, []);
+
     return (
         <div className="flex min-h-screen bg-gray-50 text-black">
             <Sidebar />
@@ -27,30 +50,39 @@ const InquiryPage = () => {
 
                 {/* 테이블 */}
                 <div className="bg-white p-4 rounded shadow">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-gray-500 border-b">
-                            <tr>
-                                <th className="py-2">번호</th>
-                                <th className="py-2">제목</th>
-                                <th className="py-2">작성일자</th>
-                                <th className="py-2">관리</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {dummyInquiries.map(({ id, title, createdAt }) => (
-                                <tr key={id} className="border-b hover:bg-gray-50">
-                                    <td className="py-2">{id}</td>
-                                    <td className="py-2">{title}</td>
-                                    <td className="py-2">{createdAt}</td>
-                                    <td className="py-2">
-                                        <button className="text-blue-500 text-xs hover:underline">
-                                            상세 보기 →
-                                        </button>
-                                    </td>
+                    {loading ? (
+                        <p className="text-sm text-gray-500">로딩 중...</p>
+                    ) : error ? (
+                        <p className="teext-sm text-red-500">{error}</p>
+                    ) : inquiries.length === 0 ? (
+                        <p className="text-sm text-gray-500">문의가 없습니다.</p>
+                    ) : (
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-gray-500 border-b">
+                                <tr>
+                                    <th className="py-2">번호</th>
+                                    <th className="py-2">제목</th>
+                                    <th className="py-2">작성일자</th>
+                                    <th className="py-2">관리</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {inquiries.map(({ inquiryId, title, createdAt }) => (
+                                    <tr key={inquiryId} className="border-b hover:bg-gray-50">
+                                        <td className="py-2">{inquiryId}</td>
+                                        <td className="py-2">{title}</td>
+                                        <td className="py-2">{dayjs(createdAt).format('YYYY-MM-DD')}</td>
+                                        <td className="py-2">
+                                            <button className="text-blue-500 text-xs hover:underline">
+                                                상세 보기 →
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                    
                 </div>
             </main>
         </div>
