@@ -6,6 +6,8 @@ interface Inquiry {
     memberId: number;
     type: string;
     title: string;
+    content: string;
+    images: string[];
     processed: boolean;
     createdAt: string;
 }
@@ -20,7 +22,7 @@ const InquiryTableCard = () => {
             try {
                 setLoading(true);
                 const data = await getData('/api/v1/admin/inquiries?page=0&size=5');
-                setInquiries(data.content);
+                setInquiries(data.data.content);
             } catch (err) {
                 setError('문의 데이터를 불러오는 데 실패했습니다.');
                 console.log("Error while fetching inquiries data:", err);
@@ -45,6 +47,8 @@ const InquiryTableCard = () => {
                 <p className="text-sm text-gray-500">로딩 중...</p>
             ) : error ? (
                 <p className="text-sm text-red-500">{error}</p>
+            ) : inquiries.length === 0 ? (
+                <p className="text-sm text-gray-500">등록된 문의가 없습니다.</p>
             ) : (
                 <table className="w-full text-sm text-left">
                     <thead className="text-gray-500 border-b">

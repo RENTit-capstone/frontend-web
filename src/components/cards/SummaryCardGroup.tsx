@@ -19,7 +19,7 @@ const SummaryCardGroup = () => {
             ).length;
             setTodayRentals(todayCount);
 
-            const delayedRes = await getData(`/api/vi/admin/rentals?statuses=DELAYED`);
+            const delayedRes = await getData(`/api/v1/admin/rentals?statuses=DELAYED`);
             setDelayedCount(delayedRes.data.content.length);
 
             const inquiryRes = await getData(`/api/v1/admin/inquiries?processed=false&page=0&size=100`);

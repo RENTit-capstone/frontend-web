@@ -24,7 +24,7 @@ const Dashboard = () => {
                     {/* SummaryStatCard는 추후 그래프 도입 시 제거하기 */}
                     <div className="col-span-1">
                         <SummaryStatCard
-                            title="일간/주간 대여량"
+                            title="삭제 예정 빈칸입니다. 그래프로 대체할 예정."
                             value="오늘 8건 / 이번 주 37건"
                             color="blue"
                         />

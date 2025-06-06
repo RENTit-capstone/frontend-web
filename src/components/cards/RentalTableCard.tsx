@@ -21,9 +21,9 @@ const RentalTableCard = () => {
             try {
                 setLoading(true);
                 const data = await getData(
-                    `/api/v1/admin/rentals?statuses=APPROVED&statues=REQUESTED&page=0&size=5&sortrequestDate,desc`
+                    `/api/v1/admin/rentals?statuses=APPROVED&statuses=REQUESTED&page=0&size=5&sort=requestDate,desc`
                 );
-                setRentals(data.content);
+                setRentals(data.content || []);
             } catch (err) {
                 setError('대여 목록을 불러오지 못했습니다.');
                 console.log("Error occured in fetching rental list: ", err);
@@ -49,6 +49,8 @@ const RentalTableCard = () => {
                 <p className="text-sm text-gray-500">로딩 중...</p>
             ) : error ? (
                 <p className="text-sm text-red-500">{error}</p>
+            ) : rentals.length === 0 ? (
+                <p className="text-sm text-gray-500">현재 완료되지 않은 대여 내역이 없습니다.</p>
             ) : (
                 <table className="w-full text-sm text-left">
                     <thead className="text-gray-500 border-b">
@@ -74,6 +76,7 @@ const RentalTableCard = () => {
                         ))}
                     </tbody>
                 </table>
+
             )}
             
         </div>

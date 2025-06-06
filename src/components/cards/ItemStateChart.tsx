@@ -13,7 +13,7 @@ const ItemStateChart = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await getData("/api/v1/items?page=0&size=1000&sort=createdAt,desc");
+        const res = await getData("/api/v1/items?&sort=createdAt,desc");
         const items = res.data.content;
 
         let available = 0, out = 0, today = 0;
