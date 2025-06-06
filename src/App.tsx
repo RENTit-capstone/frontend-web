@@ -7,34 +7,42 @@ import RentalPage from './pages/rental/RentalPage';
 import ItemPage from './pages/items/ItemPage';
 import InquiryPage from './pages/inquiries/InquiryPage';
 import useAuthStore from './stores/useAuthStore';
-import { JSX } from 'react';
+import { JSX, useEffect, useState } from 'react';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { accessToken } = useAuthStore();
-  return accessToken ? children : <Navigate to="/login" replace />;
+    const { accessToken } = useAuthStore();
+    return accessToken ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
-  const { accessToken } = useAuthStore();
+    const { accessToken, restoreTokens } = useAuthStore();
+    const [isRestored, setIsRestored] = useState(false);
 
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={
-          accessToken ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
-        } />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUp />} />
+    useEffect(() => {
+        restoreTokens();
+        setIsRestored(true);
+    }, []);
 
-        {/* 보호된 라우트 */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/stats" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
-        <Route path="/rental" element={<ProtectedRoute><RentalPage /></ProtectedRoute>} />
-        <Route path="/items" element={<ProtectedRoute><ItemPage /></ProtectedRoute>} />
-        <Route path="/inquiry" element={<ProtectedRoute><InquiryPage /></ProtectedRoute>} />
-      </Routes>
-    </Router>
-  )
+    if (!isRestored) return null;
+
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={
+                    accessToken ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+                } />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignUp />} />
+
+                {/* 보호된 라우트 */}
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/stats" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+                <Route path="/rental" element={<ProtectedRoute><RentalPage /></ProtectedRoute>} />
+                <Route path="/items" element={<ProtectedRoute><ItemPage /></ProtectedRoute>} />
+                <Route path="/inquiry" element={<ProtectedRoute><InquiryPage /></ProtectedRoute>} />
+            </Routes>
+        </Router>
+    )
 }
 
 export default App
