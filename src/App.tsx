@@ -21,7 +21,7 @@ function App() {
     useEffect(() => {
         restoreTokens();
         setIsRestored(true);
-    }, []);
+    }, [restoreTokens]);
 
     if (!isRestored) return null;
 
