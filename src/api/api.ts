@@ -1,14 +1,14 @@
 import axios from 'axios';
 import useAuthStore from '../stores/useAuthStore';
 
-const BASE_URL = window.__ENV__?.VITE_API_BASE_URL || '/';
+const getBaseUrl = () => window.__ENV__?.VITE_API_BASE_URL || '/';
 
 export const axiosNoInterceptor = axios.create({
-    baseURL: BASE_URL,
+    baseURL: getBaseUrl(),
 });
 
 export const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: getBaseUrl(),
 });
 
 const getNewToken = async () => {
