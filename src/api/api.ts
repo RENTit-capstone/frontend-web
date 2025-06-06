@@ -1,7 +1,7 @@
 import axios from 'axios';
 import useAuthStore from '../stores/useAuthStore';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = window.__ENV__?.VITE_API_BASE_URL || '/';
 
 export const axiosNoInterceptor = axios.create({
     baseURL: BASE_URL,
@@ -53,6 +53,7 @@ axiosInstance.interceptors.response.use(
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return axiosInstance(originalRequest);
             } catch (err) {
+                useAuthStore.getState().clearTokens();
                 return Promise.reject(err);
             }
         }
