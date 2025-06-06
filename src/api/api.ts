@@ -28,6 +28,7 @@ const getNewToken = async () => {
 
 axiosInstance.interceptors.request.use(
     (config) => {
+        config.baseURL = getBaseUrl();
         const token = useAuthStore.getState().accessToken;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
