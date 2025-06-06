@@ -45,6 +45,8 @@ const InquiryTableCard = () => {
                 <p className="text-sm text-gray-500">로딩 중...</p>
             ) : error ? (
                 <p className="text-sm text-red-500">{error}</p>
+            ) : inquiries.length === 0 ? (
+                <p className="text-sm test-gray-500">등록된 문의가 없습니다.</p>
             ) : (
                 <table className="w-full text-sm text-left">
                     <thead className="text-gray-500 border-b">

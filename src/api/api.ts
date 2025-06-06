@@ -33,13 +33,17 @@ axiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
         config.headers['Content-Type'] = 'application/json';
+        console.log("request:", config);
         return config;
     },
     (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        console.log("response: ",response);
+        return response
+    },
     async (error) => {
         const originalRequest = error.config;
         if (error.response?.status === 403 && !originalRequest._retry) {
