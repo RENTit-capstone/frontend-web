@@ -33,7 +33,7 @@ axiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
         config.headers['Content-Type'] = 'application/json';
-        console.log("request:", config);
+        console.log(`request config ${config.url} :`, config);
         return config;
     },
     (error) => Promise.reject(error)
@@ -41,7 +41,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     (response) => {
-        console.log("response: ",response);
+        console.log(`response ${response.config.url}: `,response);
         return response
     },
     async (error) => {
