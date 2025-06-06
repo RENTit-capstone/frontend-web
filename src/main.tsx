@@ -5,12 +5,13 @@ import App from './App.tsx'
 import { loadRuntimeEnv } from './utils/loadRuntimeEnv';
 
 const init = async () => {
-    await loadRuntimeEnv();
-    createRoot(document.getElementById('root')!).render(
-        <StrictMode>
-            <App />
-        </StrictMode>,
-    );
+    await loadRuntimeEnv().then(() => {
+        createRoot(document.getElementById('root')!).render(
+            <StrictMode>
+                <App />
+            </StrictMode>,
+        );
+    })
 };
 
 init();
