@@ -3,7 +3,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import StatusBadge from "../../components/common/StatusBadge";
+import StatusBadge from "../../components/common/InquiryStatusBadge";
 import InquiryTypeBadge from "../../components/common/InquiryTypeBadge";
 
 interface Inquiry {
@@ -63,8 +63,8 @@ const InquiryPage = () => {
             <main className="flex-1 p-6">
                 <h1 className="text-2xl font-bold mb-6">문의 조회</h1>
                 {/* 필터 영역 */}
-                <div className="flex gap-4 mb-4">
-                    <strong>문의 유형:</strong>
+                <div className="mb-4">
+                    <strong>문의 유형: </strong>
                     <select 
                         value={type}
                         onChange={(e) => setType(e.target.value)}
@@ -75,7 +75,7 @@ const InquiryPage = () => {
                         <option value="REPORT">신고/제보 문의</option>
                         <option value="DAMAGE">파손 신고</option>
                     </select>
-                    <strong>처리 상태:</strong>
+                    <strong> 처리 상태: </strong>
                     <select
                         value={processed}
                         onChange={(e) => setProcessed(e.target.value)}
@@ -130,19 +130,21 @@ const InquiryPage = () => {
                             </table>
 
                             {/* 페이지네이션 */}
-                            <div className="flex justify-center mt-4">
+                            <div className="mt-4 flex justify-end items-center gap-2">
                                 <button
-                                    onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                                    onClick={() => setPage((p) => Math.max(0, p - 1))}
                                     disabled={page === 0}
-                                    className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                                    className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
                                     이전
                                 </button>
-                                <span className="px-3 py-1">{page + 1} / {totalPages}</span>
+                                <span className="texet-sm">
+                                    페이지 {page + 1} / {totalPages}
+                                </span>
                                 <button
-                                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                                    onClick={() => setPage((p) => Math.max(totalPages - 1, p + 1))}
                                     disabled={page >= totalPages - 1}
-                                    className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                                    className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
                                     다음
                                 </button>

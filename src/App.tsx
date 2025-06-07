@@ -9,6 +9,7 @@ import InquiryPage from './pages/inquiries/InquiryPage';
 import useAuthStore from './stores/useAuthStore';
 import { JSX, useEffect, useState } from 'react';
 import InquiryDetailPage from './pages/inquiries/InquiryDetailPage';
+import RentalDetailPage from './pages/rental/RentalDetailPage';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const { accessToken } = useAuthStore();
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/items" element={<ProtectedRoute><ItemPage /></ProtectedRoute>} />
                 <Route path="/inquiry" element={<ProtectedRoute><InquiryPage /></ProtectedRoute>} />
                 <Route path="/inquiry/:id" element={<ProtectedRoute><InquiryDetailPage /></ProtectedRoute>} />
+                <Route path="/rental/:id" element={<ProtectedRoute><RentalDetailPage /></ProtectedRoute>} />
             </Routes>
         </Router>
     )
