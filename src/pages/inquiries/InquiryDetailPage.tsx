@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getData, putData } from "../../api/requests";
 import dayjs from "dayjs";
 import Sidebar from "../../components/layout/Sidebar";
+import StatusBadge from "../../components/common/StatusBadge";
 
 interface InquiryDetail {
     inquiryId: number;
@@ -69,6 +70,10 @@ const InquiryDetailPage = () => {
                     </div>
                     <div>
                         <strong>유형:</strong> {detail.type}
+                    </div>
+                    <div>
+                        <strong>처리 상태:</strong>
+                        <StatusBadge processed={detail.processed}/>
                     </div>
                     <div>
                         <strong>제목:</strong> {detail.title}

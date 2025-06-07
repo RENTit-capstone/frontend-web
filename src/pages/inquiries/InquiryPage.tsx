@@ -3,6 +3,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import StatusBadge from "../../components/common/StatusBadge";
 
 interface Inquiry {
     inquiryId: number;
@@ -97,6 +98,7 @@ const InquiryPage = () => {
                                         <th className="py-2">번호</th>
                                         <th className="py-2">제목</th>
                                         <th className="py-2">작성일자</th>
+                                        <th className="py-2">처리 상태</th>
                                         <th className="py-2">관리</th>
                                     </tr>
                                 </thead>
@@ -106,6 +108,7 @@ const InquiryPage = () => {
                                             <td className="py-2">{inquiryId}</td>
                                             <td className="py-2">{title}</td>
                                             <td className="py-2">{dayjs(createdAt).format('YYYY-MM-DD')}</td>
+                                            <td className="py-2"><StatusBadge processed={processed} /></td>
                                             <td className="py-2">
                                                 <button
                                                     className="text-blue-500 text-xs hover:underline"
