@@ -18,10 +18,25 @@ interface InquiryDetail {
     createdAt: string;
 }
 
+interface Member {
+    memberId: number;
+    email: string;
+    name: string;
+    role: string;
+    profileImg: string;
+    createdAt: string;
+    locked: boolean;
+    nickname: string;
+    gender: string;
+    studentId: string;
+    university: string;
+}
+
 const InquiryDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [detail, setDetail] = useState<InquiryDetail | null>(null);
+    const [memberInfo, setMemberInfo] = useState<Member | null>(null);
     const [answer, setAnswer] = useState("");
     const [loading, setLoading] = useState(true);
 
@@ -36,6 +51,17 @@ const InquiryDetailPage = () => {
             alert("문의 정보를 불러오지 못했습니다.");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchMember = async (memberId: number) => {
+        try {
+            console.log("memberId: ", memberId);
+            const res = await getData(`/api/v1/members/${memberId}`);
+            console.log("member Info", res);
+            setMemberInfo(res.data);
+        } catch (err) {
+            console.error("작성자 정보 조회 실패", err);
         }
     };
 
@@ -54,6 +80,12 @@ const InquiryDetailPage = () => {
         if (id) fetchDetail();
     }, [id]);
 
+    useEffect(() => {
+        if (detail?.memberId) {
+            fetchMember(detail.memberId);
+        }
+    }, [detail?.memberId]);
+
     if (loading || !detail) return <div>로딩 중...</div>
 
     return (
@@ -66,9 +98,26 @@ const InquiryDetailPage = () => {
                     <div>
                         <strong>문의 ID:</strong> {detail.inquiryId}
                     </div>
-                    <div>
-                        <strong>작성자 ID:</strong> {detail.memberId}
-                    </div>
+                    {memberInfo ? (
+                        <div className="border p-4 rounded bg-gray-50 text-sm">
+                            <h3 className="font-semibold mb-2">작성자 정보</h3>
+                            <div>
+                                <img
+                                    src={memberInfo.profileImg}
+                                    alt="profile"
+                                    className="w-14 h-14 rounded-full border"
+                                />
+                                <div>
+                                    <p><strong>닉네임:</strong> {memberInfo.nickname}</p>
+                                    <p><strong>학번:</strong> {memberInfo.studentId}</p>
+                                    <p><strong>대학:</strong> {memberInfo.university}</p>
+                                    <p className="text-gray-500 text-xs">{memberInfo.email}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-400">작성자 정보 불러오는 중...</p>
+                    )}
                     <div>
                         <strong>유형:</strong>
                         <InquiryTypeBadge type={detail.type} />
@@ -81,7 +130,8 @@ const InquiryDetailPage = () => {
                         <strong>제목:</strong> {detail.title}
                     </div>
                     <div>
-                        <strong>내용:</strong><p className="whitespace-pre-wrap">{detail.content}</p>
+                        <strong>내용:</strong>
+                        <p className="whitespace-pre-wrap">{detail.content}</p>
                     </div>
                     {detail.images && detail.images.length > 0 && (
                         <div>
