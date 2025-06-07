@@ -63,8 +63,8 @@ const InquiryPage = () => {
             <main className="flex-1 p-6">
                 <h1 className="text-2xl font-bold mb-6">문의 조회</h1>
                 {/* 필터 영역 */}
-                <div className="flex gap-4 mb-4">
-                    <strong>문의 유형:</strong>
+                <div className="mb-4">
+                    <strong>문의 유형: </strong>
                     <select 
                         value={type}
                         onChange={(e) => setType(e.target.value)}
@@ -75,7 +75,7 @@ const InquiryPage = () => {
                         <option value="REPORT">신고/제보 문의</option>
                         <option value="DAMAGE">파손 신고</option>
                     </select>
-                    <strong>처리 상태:</strong>
+                    <strong> 처리 상태: </strong>
                     <select
                         value={processed}
                         onChange={(e) => setProcessed(e.target.value)}
