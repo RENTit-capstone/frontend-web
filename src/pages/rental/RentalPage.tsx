@@ -120,6 +120,27 @@ const RentalPage = () => {
                             </tbody>
                         </table>
                     )}
+                    
+                    {/* 페이지네이션 */}
+                    <div className="mt-4 flex justify-end items-center gap-2">
+                        <button
+                            onClick={() => setPage((p) => Math.max(0, p - 1))}
+                            disabled={page === 0}
+                            className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
+                        >
+                            이전
+                        </button>
+                        <span className="texet-sm">
+                            페이지 {page + 1} / {totalPages}
+                        </span>
+                        <button
+                            onClick={() => setPage((p) => Math.max(totalPages - 1, p + 1))}
+                            disabled={page >= totalPages - 1}
+                            className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
+                        >
+                            다음
+                        </button>
+                    </div>
                 </div>
             </main>
         </div>

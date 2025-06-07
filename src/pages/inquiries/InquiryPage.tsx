@@ -130,19 +130,21 @@ const InquiryPage = () => {
                             </table>
 
                             {/* 페이지네이션 */}
-                            <div className="flex justify-center mt-4">
+                            <div className="mt-4 flex justify-end items-center gap-2">
                                 <button
-                                    onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                                    onClick={() => setPage((p) => Math.max(0, p - 1))}
                                     disabled={page === 0}
-                                    className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                                    className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
                                     이전
                                 </button>
-                                <span className="px-3 py-1">{page + 1} / {totalPages}</span>
+                                <span className="texet-sm">
+                                    페이지 {page + 1} / {totalPages}
+                                </span>
                                 <button
-                                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                                    onClick={() => setPage((p) => Math.max(totalPages - 1, p + 1))}
                                     disabled={page >= totalPages - 1}
-                                    className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                                    className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
                                     다음
                                 </button>
