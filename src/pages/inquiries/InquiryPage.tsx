@@ -3,7 +3,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import StatusBadge from "../../components/common/StatusBadge";
+import StatusBadge from "../../components/common/InquiryStatusBadge";
 import InquiryTypeBadge from "../../components/common/InquiryTypeBadge";
 
 interface Inquiry {
