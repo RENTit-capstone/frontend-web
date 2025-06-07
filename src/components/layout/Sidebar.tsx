@@ -12,7 +12,7 @@ const menuItems = [
     { label: '대여관리', icon: <ClipboardList size={18} />, path: '/rental' },
     { label: '물품관리', icon: <Box size={18} />, path: '/items' },
     { label: '문의', icon: <MessageSquare size={18} />, path: '/inquiry' },
-    { label: '사용자 통계', icon: <BarChart2 size={18} />, path: '/stats' },
+    { label: '사용자 통계', icon: <BarChart2 size={18} />, path: '/user' },
 ];
 
 const Sidebar = () => {

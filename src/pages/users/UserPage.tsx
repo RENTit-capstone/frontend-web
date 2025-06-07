@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import { getData } from "../../api/requests";
+import { useNavigate } from "react-router-dom";
 
 interface User {
     memberId: number;
@@ -13,6 +14,7 @@ interface User {
 }
 
 const UserPage = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -75,7 +77,12 @@ const UserPage = () => {
                                             </select>
                                         </td>
                                         <td className="py-2">
-                                            <button className="text-blue-500 text-xs hover:underline">저장</button>
+                                            <button
+                                                className="text-blue-500 text-xs hover:underline"
+                                                onClick={() => navigate(`/user/${user.memberId}`, { state: user })}
+                                            >
+                                                수정
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

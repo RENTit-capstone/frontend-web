@@ -32,3 +32,11 @@ export const putData = async (url: string, payload?: { [key: string]: unknown })
     }
     return response.data;
 };
+
+export const deleteData = async (url: string) => {
+    const response = await getAxiosInstance().delete(url);
+    if (!response.data.success) {
+        throw new Error(response.data.message);
+    }
+    return response.data;
+}
