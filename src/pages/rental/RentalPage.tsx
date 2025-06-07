@@ -4,6 +4,7 @@ import Tag, { StatusTag } from "../../components/common/Tag";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
 import { translateStatus } from "../../components/common/translateStatus";
+import { useNavigate } from "react-router-dom";
 
 interface Rental {
     rentalId: number;
@@ -27,6 +28,8 @@ const statusOptions = [
 ]
 
 const RentalPage = () => {
+    const navigate = useNavigate();
+
     const [rentals, setRentals] = useState<Rental[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -113,14 +116,19 @@ const RentalPage = () => {
                                         <td className="py-2">{dayjs(requestDate).format("YYYY-MM-DD")}</td>
                                         <td className="py-2"><Tag status={translateStatus(status) as StatusTag} /></td>
                                         <td className="py-2">
-                                            <button className="text-blue-500 text-xs hover:underline">자세히</button>
+                                            <button 
+                                                className="text-blue-500 text-xs hover:underline"
+                                                    onClick={() => navigate(`/rental/${rentalId}`)}
+                                            >
+                                                자세히
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     )}
-                    
+
                     {/* 페이지네이션 */}
                     <div className="mt-4 flex justify-end items-center gap-2">
                         <button
