@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 interface Inquiry {
     inquiryId: number;
@@ -10,6 +11,8 @@ interface Inquiry {
 }
 
 const InquiryPage = () => {
+    const navigate = useNavigate();
+
     const [inquiries, setInquiries] = useState<Inquiry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -104,7 +107,10 @@ const InquiryPage = () => {
                                             <td className="py-2">{title}</td>
                                             <td className="py-2">{dayjs(createdAt).format('YYYY-MM-DD')}</td>
                                             <td className="py-2">
-                                                <button className="text-blue-500 text-xs hover:underline">
+                                                <button
+                                                    className="text-blue-500 text-xs hover:underline"
+                                                    onClick={() => navigate(`/inquiry/${inquiryId}`)}
+                                                >
                                                     상세 보기 →
                                                 </button>
                                             </td>
