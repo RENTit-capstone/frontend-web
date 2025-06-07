@@ -56,12 +56,10 @@ const InquiryDetailPage = () => {
 
     const fetchMember = async (memberId: number) => {
         try {
-            console.log("memberId: ", memberId);
-            const res = await getData(`/api/v1/members/${memberId}`);
-            console.log("member Info", res);
-            setMemberInfo(res.data);
+            const res = await getData(`/api/v1/admin/members`);
+            setMemberInfo(res.data.find(member => member.memberId === memberId));
         } catch (err) {
-            console.error("작성자 정보 조회 실패", err);
+            console.error(`작성자 정보(ID:${memberId}) 조회 실패`, err);
         }
     };
 
