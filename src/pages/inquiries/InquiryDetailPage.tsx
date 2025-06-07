@@ -4,6 +4,7 @@ import { getData, putData } from "../../api/requests";
 import dayjs from "dayjs";
 import Sidebar from "../../components/layout/Sidebar";
 import StatusBadge from "../../components/common/StatusBadge";
+import InquiryTypeBadge from "../../components/common/InquiryTypeBadge";
 
 interface InquiryDetail {
     inquiryId: number;
@@ -69,7 +70,8 @@ const InquiryDetailPage = () => {
                         <strong>작성자 ID:</strong> {detail.memberId}
                     </div>
                     <div>
-                        <strong>유형:</strong> {detail.type}
+                        <strong>유형:</strong>
+                        <InquiryTypeBadge type={detail.type} />
                     </div>
                     <div>
                         <strong>처리 상태:</strong>
