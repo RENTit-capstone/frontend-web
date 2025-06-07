@@ -14,21 +14,41 @@ const InquiryPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchInquiries = async () => {
-            try {
-                const data = await getData("/api/v1/admin/inquiries?processed=false&page=0&size=20");
-                setInquiries(data.content || []);
-            } catch (err) {
-                setError("문의 목록을 불러오는 데 실패했습니다.");
-                console.error("InquiryPage fetch error:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const [type, setType] = useState<string>("");
+    const [processed, setProcessed] = useState<string>("");
+    const [page, setPage] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
+    const fetchInquiries = async () => {
+        setLoading(true);
+        try {
+            const query = new URLSearchParams();
+            query.set("page", String(page));
+            query.set("size", "10");
+
+            if (type) query.set("type", type);
+            if (processed) query.set("processed", processed);
+
+            const url = `/api/v1/admin/inquiries?${query.toString()}`;
+            console.log(url);
+            const data = await getData(url);
+            setInquiries(data.data.content || []);
+            setTotalPages(data.data.totalPages || 1);
+        } catch (err) {
+            setError("문의 목록을 불러오는 데 실패했습니다.");
+            console.error("InquiryPage fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        setPage(0);
+    }, [type, processed]);
+    
+    useEffect(() => {
         fetchInquiries();
-    }, []);
+    }, [page, type, processed]);
 
     return (
         <div className="flex min-h-screen bg-gray-50 text-black">
@@ -37,15 +57,25 @@ const InquiryPage = () => {
                 <h1 className="text-2xl font-bold mb-6">문의 조회</h1>
                 {/* 필터 영역 */}
                 <div className="flex gap-4 mb-4">
-                    <input 
-                        type="text"
-                        placeholder="검색어 입력"   
-                        className="px-3 py-2 border border-gray-300 rounded text-sm w-60"
-                    />
-                    <input
-                        type="date"
+                    <select 
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded text-sm"
-                    />
+                    >
+                        <option value="">전체 유형</option>
+                        <option value="SERVICE">서비스 이용 문의</option>
+                        <option value="REPORT">신고/제보 문의</option>
+                        <option value="DAMAGE">파손 신고</option>
+                    </select>
+                    <select
+                        value={processed}
+                        onChange={(e) => setProcessed(e.target.value)}
+                        className="px-3 py-2 border border-gray-300 rounded text-sm"
+                    >
+                        <option value="">전체 상태</option>
+                        <option value="false">미처리</option>
+                        <option value="true">처리됨</option>
+                    </select>
                 </div>
 
                 {/* 테이블 */}
@@ -57,30 +87,51 @@ const InquiryPage = () => {
                     ) : inquiries.length === 0 ? (
                         <p className="text-sm text-gray-500">문의가 없습니다.</p>
                     ) : (
-                        <table className="w-full text-sm text-left">
-                            <thead className="text-gray-500 border-b">
-                                <tr>
-                                    <th className="py-2">번호</th>
-                                    <th className="py-2">제목</th>
-                                    <th className="py-2">작성일자</th>
-                                    <th className="py-2">관리</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {inquiries.map(({ inquiryId, title, createdAt }) => (
-                                    <tr key={inquiryId} className="border-b hover:bg-gray-50">
-                                        <td className="py-2">{inquiryId}</td>
-                                        <td className="py-2">{title}</td>
-                                        <td className="py-2">{dayjs(createdAt).format('YYYY-MM-DD')}</td>
-                                        <td className="py-2">
-                                            <button className="text-blue-500 text-xs hover:underline">
-                                                상세 보기 →
-                                            </button>
-                                        </td>
+                        <>
+                            <table className="w-full text-sm text-left">
+                                <thead className="text-gray-500 border-b">
+                                    <tr>
+                                        <th className="py-2">번호</th>
+                                        <th className="py-2">제목</th>
+                                        <th className="py-2">작성일자</th>
+                                        <th className="py-2">관리</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {inquiries.map(({ inquiryId, title, createdAt }) => (
+                                        <tr key={inquiryId} className="border-b hover:bg-gray-50">
+                                            <td className="py-2">{inquiryId}</td>
+                                            <td className="py-2">{title}</td>
+                                            <td className="py-2">{dayjs(createdAt).format('YYYY-MM-DD')}</td>
+                                            <td className="py-2">
+                                                <button className="text-blue-500 text-xs hover:underline">
+                                                    상세 보기 →
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {/* 페이지네이션 */}
+                            <div className="flex justify-center mt-4">
+                                <button
+                                    onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                                    disabled={page === 0}
+                                    className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                                >
+                                    이전
+                                </button>
+                                <span className="px-3 py-1">{page + 1} / {totalPages}</span>
+                                <button
+                                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                                    disabled={page >= totalPages - 1}
+                                    className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                                >
+                                    다음
+                                </button>
+                            </div>
+                        </>
                     )}
                     
                 </div>
