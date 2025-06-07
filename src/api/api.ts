@@ -26,7 +26,6 @@ const getAxiosInstance = (): AxiosInstance => {
         axiosInstance.interceptors.request.use((config) => {
             const token = useAuthStore.getState().accessToken;
             if (token) {
-                console.log("token:", token);
                 config.headers.Authorization = `Bearer ${token}`;
             }
             config.headers['Content-Type'] = 'application/json';

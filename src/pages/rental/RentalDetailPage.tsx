@@ -61,8 +61,6 @@ const RentalDetailPage = () => {
     if (loading) return <div className="p-6">로딩 중...</div>;
     if (error || !detail) return <div className="p-6 text-red-500">{error}</div>;
 
-    console.log(detail.thumbnailUrl);
-
     return (
         <div className="flex min-h-screen bg-gray-50 text-black">
             <Sidebar />
