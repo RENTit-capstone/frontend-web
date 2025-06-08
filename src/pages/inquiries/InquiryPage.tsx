@@ -142,7 +142,7 @@ const InquiryPage = () => {
                                     페이지 {page + 1} / {totalPages}
                                 </span>
                                 <button
-                                    onClick={() => setPage((p) => Math.max(totalPages - 1, p + 1))}
+                                    onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                                     disabled={page >= totalPages - 1}
                                     className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
