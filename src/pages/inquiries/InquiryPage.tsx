@@ -99,12 +99,12 @@ const InquiryPage = () => {
                             <table className="w-full text-sm text-left">
                                 <thead className="text-gray-500 border-b">
                                     <tr>
-                                        <th className="py-2">번호</th>
+                                        <th className="py-2">문의 ID</th>
                                         <th className="py-2">제목</th>
-                                        <th className="py-2">유형</th>
+                                        <th className="py-2">문의 유형</th>
                                         <th className="py-2">작성일자</th>
                                         <th className="py-2">처리 상태</th>
-                                        <th className="py-2">관리</th>
+                                        <th className="py-2">상세 보기</th>
                                     </tr>
                                 </thead>
                                 <tbody>
