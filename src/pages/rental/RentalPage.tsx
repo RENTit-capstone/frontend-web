@@ -99,7 +99,7 @@ const RentalPage = () => {
                         <table className="w-full text-sm text-left">
                             <thead className="text-gray-500 border-b">
                                 <tr>
-                                    <th className="py-2">대여ID</th>
+                                    <th className="py-2">대여 ID</th>
                                     <th className="py-2">사용자</th>
                                     <th className="py-2">물품명</th>
                                     <th className="py-2">대여 요청 일자</th>

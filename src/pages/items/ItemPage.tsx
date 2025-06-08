@@ -37,28 +37,29 @@ const ItemPage = () => {
     const [page, setPage] = useState<number>(0);
     const itemsPerPage = 10;
 
-    const fetchItems = async () => {
-        setLoading(true);
-        try {
-            const query = new URLSearchParams();
-            query.set("page", "0");
-            query.set("size", "25");
-            query.set("sort", "createdAt,desc");
-            if (keyword) query.set("keyword", keyword);
-
-            const res = await getData(`/api/v1/items?${query.toString()}`);
-            setItems(res.data.content || []);
-        } catch (err) {
-            console.error("물품 목록 불러오기 실패:", err);
-            setError("물품 목록을 불러오는 데 실패했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchItems = async () => {
+            setPage(0);
+            setLoading(true);
+            try {
+                const query = new URLSearchParams();
+                query.set("page", "0");
+                query.set("size", String(itemsPerPage));
+                query.set("sort", "createdAt,desc");
+                if (keyword) query.set("keyword", keyword);
+
+                const res = await getData(`/api/v1/items?${query.toString()}`);
+                setItems(res.data.content || []);
+            } catch (err) {
+                console.error("물품 목록 불러오기 실패:", err);
+                setError("물품 목록을 불러오는 데 실패했습니다.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        
         fetchItems();
-    }, [keyword]);
+    }, [keyword, statusFilter]);
 
     const filteredItems = items.filter((item) => {
         if (!statusFilter) return true;
@@ -81,6 +82,7 @@ const ItemPage = () => {
 
                 {/* 필터 영역 */}
                 <div className="mb-4 flex gap-4 items-center">
+                    <label>물품 검색: </label>
                     <input
                         type="text"
                         placeholder="검색어 입력"
@@ -91,6 +93,7 @@ const ItemPage = () => {
                         }}
                         className="px-3 py-2 border border-gray-300 rounded text-sm w-60"
                     />
+                    <label>상태: </label>
                     <select
                         value={statusFilter}
                         onChange={(e) => {
@@ -118,7 +121,7 @@ const ItemPage = () => {
                             <table className="w-full text-sm text-left">
                                 <thead className="text-gray-500 border-b">
                                     <tr>
-                                        <th className="py-2">물품ID</th>
+                                        <th className="py-2">물품 ID</th>
                                         <th className="py-2">물품명</th>
                                         <th className="py-2">소유자</th>
                                         <th className="py-2">상태</th>
@@ -147,7 +150,7 @@ const ItemPage = () => {
                                     disabled={page === 0}
                                     className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
-                                    ← 이전
+                                    이전
                                 </button>
                                 <span className="text-sm">
                                     페이지 {page + 1} / {totalPages}
@@ -157,7 +160,7 @@ const ItemPage = () => {
                                     disabled={page >= totalPages - 1}
                                     className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                                 >
-                                    다음 →
+                                    다음
                                 </button>
                             </div>
                         </>
