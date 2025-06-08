@@ -41,20 +41,6 @@ const InquiryDetailPage = () => {
     const [answer, setAnswer] = useState("");
     const [loading, setLoading] = useState(true);
 
-    const fetchDetail = async () => {
-        setLoading(true);
-        try {
-            const data = await getData(`/api/v1/admin/inquiries/${id}`);
-            console.log(data);
-            setDetail(data.data);
-            setAnswer(data.data.answer || "");
-        } catch (err) {
-            alert("문의 정보를 불러오지 못했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const fetchMember = async (memberId: number) => {
         try {
             const res = await getData(`/api/v1/admin/members`);
@@ -77,7 +63,6 @@ const InquiryDetailPage = () => {
                     university: "존재하지 않음"
                 });
             }
-            console.log("member:", found);
         } catch (err) {
             console.error(`작성자 정보(ID:${memberId}) 조회 실패`, err);
             setMemberInfo({
@@ -104,10 +89,25 @@ const InquiryDetailPage = () => {
             navigate("/inquiry");
         } catch (err) {
             alert("답변 등록에 실패했습니다.");
+            console.error(err);
         }
     };
 
     useEffect(() => {
+        const fetchDetail = async () => {
+            setLoading(true);
+            try {
+                const data = await getData(`/api/v1/admin/inquiries/${id}`);
+                setDetail(data.data);
+                setAnswer(data.data.answer || "");
+            } catch (err) {
+                alert("문의 정보를 불러오지 못했습니다.");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         if (id) fetchDetail();
     }, [id]);
 
@@ -140,12 +140,16 @@ const InquiryDetailPage = () => {
                         <strong>처리 상태:</strong>
                         <StatusBadge processed={detail.processed}/>
                     </div>
-                    {memberInfo ? (
+                    {!memberInfo ? (
+                        <p className="text-sm text-gray-400">작성자 정보 불러오는 중...</p>
+                    ) : memberInfo.name === "UNKNOWN" ? (
+                        <p className="text-sm text-red-500">존재하지 않는 사용자입니다.</p>
+                    ) : (
                         <div className="border p-4 rounded bg-gray-50 text-sm">
                             <h3 className="font-semibold mb-2">작성자 정보</h3>
                             <div>
                                 <img
-                                    src={memberInfo.profileImg || defaultProfileImg}
+                                    src={memberInfo.profileImg?.trim() ? memberInfo.profileImg : defaultProfileImg}
                                     alt="profile"
                                     className="w-14 h-14 rounded-full border object-cover"
                                 />
@@ -157,8 +161,6 @@ const InquiryDetailPage = () => {
                                 </div>
                             </div>
                         </div>
-                    ) : (
-                        <p className="text-sm text-gray-400">작성자 정보 불러오는 중...</p>
                     )}
                     <div>
                         <strong>내용:</strong>
@@ -181,14 +183,16 @@ const InquiryDetailPage = () => {
                         <strong>답변:</strong>
                         <textarea 
                             value={answer}
+                            disabled={detail.processed}
                             onChange={(e) => setAnswer(e.target.value)}
                             rows={6}
                             className="w-full mt-1 p-2 border rounded"
                         />
                     </div>
                     <button
+                        disabled={detail.processed}
                         onClick={handleSubmit}
-                        className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                        className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300"
                     >
                         답변 등록 및 처리
                     </button>
