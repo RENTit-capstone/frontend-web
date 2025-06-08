@@ -26,34 +26,33 @@ const InquiryPage = () => {
     const [page, setPage] = useState<number>(0);
     const [totalPages, setTotalPages] = useState<number>(1);
 
-    const fetchInquiries = async () => {
-        setLoading(true);
-        try {
-            const query = new URLSearchParams();
-            query.set("page", String(page));
-            query.set("size", "10");
-
-            if (type) query.set("type", type);
-            if (processed) query.set("processed", processed);
-
-            const url = `/api/v1/admin/inquiries?${query.toString()}`;
-            console.log(url);
-            const data = await getData(url);
-            setInquiries(data.data.content || []);
-            setTotalPages(data.data.totalPages || 1);
-        } catch (err) {
-            setError("문의 목록을 불러오는 데 실패했습니다.");
-            console.error("InquiryPage fetch error:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
         setPage(0);
     }, [type, processed]);
     
     useEffect(() => {
+        const fetchInquiries = async () => {
+            setLoading(true);
+            try {
+                const query = new URLSearchParams();
+                query.set("page", String(page));
+                query.set("size", "10");
+
+                if (type) query.set("type", type);
+                if (processed) query.set("processed", processed);
+
+                const url = `/api/v1/admin/inquiries?${query.toString()}`;
+                const data = await getData(url);
+                setInquiries(data.data.content || []);
+                setTotalPages(data.data.totalPages || 1);
+            } catch (err) {
+                setError("문의 목록을 불러오는 데 실패했습니다.");
+                console.error("InquiryPage fetch error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchInquiries();
     }, [page, type, processed]);
 
@@ -64,7 +63,7 @@ const InquiryPage = () => {
                 <h1 className="text-2xl font-bold mb-6">문의 조회</h1>
                 {/* 필터 영역 */}
                 <div className="mb-4">
-                    <strong>문의 유형: </strong>
+                    <label>문의 유형: </label>
                     <select 
                         value={type}
                         onChange={(e) => setType(e.target.value)}
@@ -75,7 +74,7 @@ const InquiryPage = () => {
                         <option value="REPORT">신고/제보 문의</option>
                         <option value="DAMAGE">파손 신고</option>
                     </select>
-                    <strong> 처리 상태: </strong>
+                    <label> 처리 상태: </label>
                     <select
                         value={processed}
                         onChange={(e) => setProcessed(e.target.value)}
@@ -92,7 +91,7 @@ const InquiryPage = () => {
                     {loading ? (
                         <p className="text-sm text-gray-500">로딩 중...</p>
                     ) : error ? (
-                        <p className="teext-sm text-red-500">{error}</p>
+                        <p className="text-sm text-red-500">{error}</p>
                     ) : inquiries.length === 0 ? (
                         <p className="text-sm text-gray-500">문의가 없습니다.</p>
                     ) : (
@@ -138,7 +137,7 @@ const InquiryPage = () => {
                                 >
                                     이전
                                 </button>
-                                <span className="texet-sm">
+                                <span className="text-sm">
                                     페이지 {page + 1} / {totalPages}
                                 </span>
                                 <button
@@ -151,7 +150,6 @@ const InquiryPage = () => {
                             </div>
                         </>
                     )}
-                    
                 </div>
             </main>
         </div>
