@@ -1,6 +1,5 @@
 import Sidebar from '../../components/layout/Sidebar';
 import SummaryCardGroup from "../../components/cards/SummaryCardGroup";
-import SummaryStatCard from "../../components/cards/SummaryStatCard";
 import ChartCard from "../../components/cards/ChartCard";
 import ItemStateChart from "../../components/cards/ItemStateChart";
 import RentalTableCard from "../../components/cards/RentalTableCard";
@@ -18,17 +17,9 @@ const Dashboard = () => {
                 <SummaryCardGroup />
 
                 {/* 중간 통계 영역 */}
-                <div className="grid grid-cols-3 gap-6 mb-6">
-                    <ChartCard />
-                    <ItemStateChart />
-                    {/* SummaryStatCard는 추후 그래프 도입 시 제거하기 */}
-                    <div className="col-span-1">
-                        <SummaryStatCard
-                            title="삭제 예정 빈칸입니다. 그래프로 대체할 예정."
-                            value="오늘 8건 / 이번 주 37건"
-                            color="blue"
-                        />
-                    </div>
+                <div className="flex gap-4 mb-6">
+                    <div className="w-1/2"><ChartCard /></div>
+                    <div className="w-1/2"><ItemStateChart /></div>
                 </div>
 
                 {/* 하단 테이블 영역 */}

@@ -1,60 +1,55 @@
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getData } from '../../api/requests';
+import { translateStatus } from '../common/translateStatus';
+import { RENTAL_STATUS_LIST } from '../common/rentalStatusList';
 
-const RENTAL_STATUS_LIST = [
-    'REQUESTED',
-    'APPROVED',
-    'REJECTED',
-    'CANCELLED',
-    'LEFT_IN_LOCKER',
-    'PICKED_UP',
-    'RETURNED_TO_LOCKER',
-    'COMPLETED',
-    'DELAYED',
-];
+export type RentalStatus = typeof RENTAL_STATUS_LIST[number];
 
-const RENTAL_COLORS: Record<string, string> = {
-    REQUESTED: '#60A5FA',          // blue-400
-    APPROVED: '#34D399',           // green-400
-    REJECTED: '#9CA3AF',           // gray-400
-    CANCELLED: '#D1D5DB',          // cool-gray-300
-    LEFT_IN_LOCKER: '#F472B6',     // pink-400
-    PICKED_UP: '#818CF8',          // indigo-400
-    RETURNED_TO_LOCKER: '#FBBF24', // yellow-400
-    COMPLETED: '#10B981',          // emerald-500
-    DELAYED: '#F87171',            // red-400
+const RENTAL_COLORS: Record<RentalStatus, string> = {
+    REQUESTED: '#60A5FA',
+    APPROVED: '#34D399',
+    REJECTED: '#9CA3AF',
+    CANCELLED: '#D1D5DB',
+    LEFT_IN_LOCKER: '#F472B6',
+    PICKED_UP: '#818CF8',
+    RETURNED_TO_LOCKER: '#FBBF24',
+    COMPLETED: '#10B981',
+    DELAYED: '#F87171',
 };
 
+interface ChartData {
+    name: RentalStatus;
+    value: number;
+}
+
 const ChartCard = () => {
-    const [data, setData] = useState<{ name: string; value: number }[]>([]);
+    const [data, setData] = useState<ChartData[]>([]);
 
     useEffect(() => {
         const fetchRentalStats = async () => {
             try {
-            const res = await getData('/api/v1/admin/rentals');
-            const rentals = res.data.content || [];
+                const res = await getData('/api/v1/admin/rentals');
+                const rentals: { status: RentalStatus }[] = res.data.content || [];
 
-            const countMap: Record<string, number> = {};
-            RENTAL_STATUS_LIST.forEach((status) => {
-                countMap[status] = 0;
-            });
+                const countMap: Record<RentalStatus, number> = Object.fromEntries(
+                    RENTAL_STATUS_LIST.map((status) => [status, 0])
+                ) as Record<RentalStatus, number>;
 
-            rentals.forEach((rental: any) => {
-                const status = rental.status;
-                if (status && Object.prototype.hasOwnProperty.call(countMap, status)) {
-                    countMap[status]++;
-                }
-            });
+                rentals.forEach((rental) => {
+                    if (rental.status in countMap) {
+                        countMap[rental.status]++;
+                    }
+                });
 
-            const chartData = Object.entries(countMap)
-                .filter(([, value]) => value > 0)
-                .map(([key, value]) => ({
-                    name: key,
-                    value,
-                }));
+                const chartData: ChartData[] = RENTAL_STATUS_LIST
+                .map((status) => ({
+                    name: status,
+                    value: countMap[status],
+                }))
+                .filter((item) => item.value > 0);
 
-            setData(chartData);
+                setData(chartData);
             } catch (err) {
                 console.error('대여 통계 조회 실패:', err);
             }
@@ -76,18 +71,22 @@ const ChartCard = () => {
                             outerRadius={80}
                             dataKey="value"
                             label={({ name, percent }) =>
-                                `${name} (${(percent * 100).toFixed(0)}%)`
+                                `${translateStatus(name)} (${(percent * 100).toFixed(0)}%)`
                             }
                         >
                             {data.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={RENTAL_COLORS[entry.name] ?? '#D1D5DB'} // fallback gray
+                                    fill={RENTAL_COLORS[entry.name] ?? '#D1D5DB'}
                                 />
                             ))}
                         </Pie>
-                        <Tooltip />
-                        <Legend />
+                        <Tooltip
+                            formatter={(value, name) => [value, translateStatus(name as string)]}
+                        />
+                        <Legend
+                            formatter={(value) => translateStatus(value as string)}
+                        />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
