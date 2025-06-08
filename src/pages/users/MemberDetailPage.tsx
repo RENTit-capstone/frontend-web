@@ -114,7 +114,11 @@ const MemberDetailPage = () => {
                     ) : (
                         <ul className="text-sm space-y-1">
                             {rentals.filter(r => !r.owner).map((r) => (
-                                <li key={r.rentalId}>
+                                <li
+                                    key={r.rentalId}
+                                    className="cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/rental/${r.rentalId}`)}
+                                >
                                     [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateStatus(r.status)} />
                                 </li>
                             ))}
@@ -129,7 +133,11 @@ const MemberDetailPage = () => {
                     ) : (
                         <ul className="text-sm space-y-1">
                             {rentals.filter(r => r.owner).map((r) => (
-                                <li key={r.rentalId}>
+                                <li
+                                    key={r.rentalId}
+                                    className="cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/rental/${r.rentalId}`)}
+                                >
                                     [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateStatus(r.status)} />
                                 </li>
                             ))}
@@ -144,7 +152,11 @@ const MemberDetailPage = () => {
                     ) : (
                         <ul className="text-sm space-y-1">
                             {inquiries.map((q) => (
-                                <li key={q.inquiryId}>
+                                <li
+                                    key={q.inquiryId}
+                                    className="cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/inquiry/${q.inquiryId}`)}
+                                >
                                     [{dayjs(q.createdAt).format("YYYY-MM-DD")}] {q.title} ({q.type}) {q.processed ? '✅' : '❌'}
                                 </li>
                             ))}
