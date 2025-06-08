@@ -51,13 +51,12 @@ const UserPage = () => {
                         <table className="w-full text-sm text-left">
                             <thead className="text-gray-500 border-b">
                                 <tr>
-                                    <th className="py-2">번호</th>
+                                    <th className="py-2">유저 ID</th>
                                     <th className="py-2">이름</th>
                                     <th className="py-2">닉네임</th>
                                     <th className="py-2">이메일</th>
                                     <th className="py-2">소속</th>
                                     <th className="py-2">학번</th>
-                                    <th className="py-2">상태</th>
                                     <th className="py-2">관리</th>
                                 </tr>
                             </thead>
@@ -70,12 +69,6 @@ const UserPage = () => {
                                         <td className="py-2">{user.email}</td>
                                         <td className="py-2">{user.university}</td>
                                         <td className="py-2">{user.studentId}</td>
-                                        <td className="py-2">
-                                            <select className="border border-gray-300 rounded px-2 py-1 text-xs">
-                                                <option value="active" selected={!user.locked}>활성</option>
-                                                <option value="inactive" selected={user.locked}>비활성</option>
-                                            </select>
-                                        </td>
                                         <td className="py-2">
                                             <button
                                                 className="text-blue-500 text-xs hover:underline"
