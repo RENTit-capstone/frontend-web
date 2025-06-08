@@ -35,26 +35,26 @@ const RentalDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchDetail = async () => {
-        setLoading(true);
-        try {
-            const data = await getData(`/api/v1/admin/rentals?page=0&size=1000`);
-            const allRentals = data.data.content || [];
-            const found = allRentals.find((r: RentalDetail) => String(r.rentalId) === id);
-            if (!found) {
-                setError("해당 대여 정보를 찾을 수 없습니다.");
-                return;
-            }
-            setDetail(found);
-        } catch (err) {
-            console.error(err);
-            setError("대여 정보를 불러오는 데 실패했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchDetail = async () => {
+            setLoading(true);
+            try {
+                const data = await getData(`/api/v1/admin/rentals?page=0&size=1000`);
+                const allRentals = data.data.content || [];
+                const found = allRentals.find((r: RentalDetail) => String(r.rentalId) === id);
+                if (!found) {
+                    setError("해당 대여 정보를 찾을 수 없습니다.");
+                    return;
+                }
+                setDetail(found);
+            } catch (err) {
+                console.error(err);
+                setError("대여 정보를 불러오는 데 실패했습니다.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
         if (id) fetchDetail();
     }, [id]);
 
@@ -102,7 +102,7 @@ const RentalDetailPage = () => {
                     )}
 
                     <button
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate("/rental")}
                         className="mt-4 text-blue-500 hover:underline text-sm"
                     >
                         ← 목록으로 돌아가기
