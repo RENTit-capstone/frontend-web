@@ -26,6 +26,8 @@ interface Rental {
     status: string;
     requestDate: string;
     owner: boolean;
+    renterName: string;
+    ownerName: string;
 }
 
 interface Inquiry {
@@ -42,7 +44,8 @@ const MemberDetailPage = () => {
     const navigate = useNavigate();
     const member = location.state as Member;
 
-    const [rentals, setRentals] = useState<Rental[]>([]);
+    const [borrowedRentals, setBorrowedRentals] = useState<Rental[]>([]);
+    const [ownedRentals, setOwnedRentals] = useState<Rental[]>([]);
     const [inquiries, setInquiries] = useState<Inquiry[]>([]);
 
     const handleDelete = async () => {
@@ -62,7 +65,13 @@ const MemberDetailPage = () => {
         const fetchExtraInfo = async () => {
             try {
                 const rentalRes = await getData(`/api/v1/admin/rentals/${member.memberId}`);
-                setRentals(rentalRes.data);
+                const rentalData: Rental[] = rentalRes.data;
+
+                const borrowed = rentalData.filter(r => r.renterName === member.nickname);
+                const owned = rentalData.filter(r => r.ownerName === member.nickname);
+
+                setBorrowedRentals(borrowed);
+                setOwnedRentals(owned);
 
                 const inquiryRes = await getData(`/api/v1/admin/inquiries`);
                 const myInquiries = inquiryRes.data.content.filter((q: Inquiry) => q.memberId === member.memberId);
@@ -74,6 +83,7 @@ const MemberDetailPage = () => {
 
         fetchExtraInfo();
     }, [member]);
+
 
     return (
         <div className="flex min-h-screen bg-gray-50 text-black">
@@ -109,11 +119,11 @@ const MemberDetailPage = () => {
 
                 <div className="mt-8">
                     <h2 className="text-xl font-semibold mb-2">대여 기록 (내가 빌린 물품)</h2>
-                    {rentals.filter(r => !r.owner).length === 0 ? (
+                    {borrowedRentals.length === 0 ? (
                         <p className="text-sm text-gray-500">대여 기록 없음</p>
                     ) : (
                         <ul className="text-sm space-y-1">
-                            {rentals.filter(r => !r.owner).map((r) => (
+                            {borrowedRentals.map((r) => (
                                 <li
                                     key={r.rentalId}
                                     className="cursor-pointer hover:underline"
@@ -128,11 +138,11 @@ const MemberDetailPage = () => {
 
                 <div className="mt-6">
                     <h2 className="text-xl font-semibold mb-2">내 물품의 대여 기록</h2>
-                    {rentals.filter(r => r.owner).length === 0 ? (
+                    {ownedRentals.length === 0 ? (
                         <p className="text-sm text-gray-500">소유한 물품의 대여 기록 없음</p>
                     ) : (
                         <ul className="text-sm space-y-1">
-                            {rentals.filter(r => r.owner).map((r) => (
+                            {ownedRentals.map((r) => (
                                 <li
                                     key={r.rentalId}
                                     className="cursor-pointer hover:underline"
