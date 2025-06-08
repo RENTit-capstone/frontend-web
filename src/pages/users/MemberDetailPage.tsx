@@ -1,7 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
-import { putData, deleteData } from "../../api/requests";
+import { deleteData, getData } from "../../api/requests";
+import dayjs from "dayjs";
+import Tag from "../../components/common/Tag";
+import defaultProfileImg from "../../assets/default_user_profile.png"
+import { translateStatus } from "../../components/common/translateStatus";
 
 interface Member {
     memberId: number;
@@ -16,33 +20,33 @@ interface Member {
     memberType: string;
 }
 
+interface Rental {
+    rentalId: number;
+    itemName: string;
+    status: string;
+    requestDate: string;
+    owner: boolean;
+    renterName: string;
+    ownerName: string;
+}
+
+interface Inquiry {
+    inquiryId: number;
+    title: string;
+    type: string;
+    processed: boolean;
+    createdAt: string;
+    memberId: number;
+}
+
 const MemberDetailPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const member = location.state as Member;
 
-    const [form, setForm] = useState({
-        name: member.name,
-        nickname: member.nickname,
-        phone: member.phone,
-        memberType: member.memberType,
-        imageKey: "",
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleUpdate = async () => {
-        try {
-            await putData("/api/v1/members", form);
-            alert("회원 정보가 수정되었습니다.");
-        } catch (err) {
-            console.error("수정 실패:", err);
-            alert("수정 실패");
-        }
-    };
+    const [borrowedRentals, setBorrowedRentals] = useState<Rental[]>([]);
+    const [ownedRentals, setOwnedRentals] = useState<Rental[]>([]);
+    const [inquiries, setInquiries] = useState<Inquiry[]>([]);
 
     const handleDelete = async () => {
         const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
@@ -57,76 +61,121 @@ const MemberDetailPage = () => {
         }
     };
 
+    useEffect(() => {
+        const fetchExtraInfo = async () => {
+            try {
+                const rentalRes = await getData(`/api/v1/admin/rentals/${member.memberId}`);
+                const rentalData: Rental[] = rentalRes.data;
+
+                const borrowed = rentalData.filter(r => r.renterName === member.nickname);
+                const owned = rentalData.filter(r => r.ownerName === member.nickname);
+
+                setBorrowedRentals(borrowed);
+                setOwnedRentals(owned);
+
+                const inquiryRes = await getData(`/api/v1/admin/inquiries`);
+                const myInquiries = inquiryRes.data.content.filter((q: Inquiry) => q.memberId === member.memberId);
+                setInquiries(myInquiries);
+            } catch (err) {
+                console.error("유저 관련 정보 불러오기 실패:", err);
+            }
+        };
+
+        fetchExtraInfo();
+    }, [member]);
+
+
     return (
         <div className="flex min-h-screen bg-gray-50 text-black">
             <Sidebar />
             <main className="flex-1 p-6">
                 <h1 className="text-2xl font-bold mb-6">회원 상세 정보</h1>
                 <div className="bg-white p-4 rounded shadow space-y-3">
-                    <div><strong>회원 ID:</strong> {member.memberId}</div>
-                    <div><strong>이메일:</strong> {member.email}</div>
-                    <div><strong>소속 대학:</strong> {member.university}</div>
-                    <div><strong>학번:</strong> {member.studentId}</div>
-                    <div><strong>성별:</strong> {member.gender}</div>
-
-                    <div>
-                        <label className="block text-sm font-medium">이름</label>
-                        <input
-                            name="name"
-                            value={form.name}
-                            onChange={handleChange}
-                            className="w-full border rounded px-3 py-2 mt-1"
+                    <div className="flex gap-4 items-center">
+                        <img
+                            src={member.profileImg || defaultProfileImg}
+                            alt="profile"
+                            className="w-20 h-20 rounded-full border object-cover"
                         />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">닉네임</label>
-                        <input
-                            name="nickname"
-                            value={form.nickname}
-                            onChange={handleChange}
-                            className="w-full border rounded px-3 py-2 mt-1"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">전화번호</label>
-                        <input
-                            name="phone"
-                            value={form.phone}
-                            onChange={handleChange}
-                            className="w-full border rounded px-3 py-2 mt-1"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">이미지 키 (선택)</label>
-                        <input
-                            name="imageKey"
-                            value={form.imageKey}
-                            onChange={handleChange}
-                            className="w-full border rounded px-3 py-2 mt-1"
-                        />
+                        <div>
+                            <p><strong>{member.nickname}</strong> ({member.name})</p>
+                            <p className="text-sm text-gray-500">{member.email}</p>
+                            <p className="text-sm">{member.university} / {member.studentId}</p>
+                            <p className="text-sm">성별: {member.gender}</p>
+                            <p className="text-sm">연락처: {member.phone}</p>
+                        </div>
                     </div>
 
                     <div className="flex gap-4 mt-4">
                         <button
-                            onClick={handleUpdate}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                            수정
-                        </button>
-                        <button
+                            type="button"
                             onClick={handleDelete}
                             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                         >
-                            삭제
+                            회원 삭제
                         </button>
                     </div>
                 </div>
+
+                <div className="mt-8">
+                    <h2 className="text-xl font-semibold mb-2">대여 기록 (내가 빌린 물품)</h2>
+                    {borrowedRentals.length === 0 ? (
+                        <p className="text-sm text-gray-500">대여 기록 없음</p>
+                    ) : (
+                        <ul className="text-sm space-y-1">
+                            {borrowedRentals.map((r) => (
+                                <li
+                                    key={r.rentalId}
+                                    className="cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/rental/${r.rentalId}`)}
+                                >
+                                    [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateStatus(r.status)} />
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
+                <div className="mt-6">
+                    <h2 className="text-xl font-semibold mb-2">내 물품의 대여 기록</h2>
+                    {ownedRentals.length === 0 ? (
+                        <p className="text-sm text-gray-500">소유한 물품의 대여 기록 없음</p>
+                    ) : (
+                        <ul className="text-sm space-y-1">
+                            {ownedRentals.map((r) => (
+                                <li
+                                    key={r.rentalId}
+                                    className="cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/rental/${r.rentalId}`)}
+                                >
+                                    [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateStatus(r.status)} />
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
+                <div className="mt-6">
+                    <h2 className="text-xl font-semibold mb-2">작성한 문의</h2>
+                    {inquiries.length === 0 ? (
+                        <p className="text-sm text-gray-500">작성한 문의 없음</p>
+                    ) : (
+                        <ul className="text-sm space-y-1">
+                            {inquiries.map((q) => (
+                                <li
+                                    key={q.inquiryId}
+                                    className="cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/inquiry/${q.inquiryId}`)}
+                                >
+                                    [{dayjs(q.createdAt).format("YYYY-MM-DD")}] {q.title} ({q.type}) {q.processed ? '✅' : '❌'}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
             </main>
         </div>
-    )
-}
+    );
+};
 
 export default MemberDetailPage;

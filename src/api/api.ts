@@ -6,7 +6,6 @@ let axiosNoInterceptor: AxiosInstance | null = null;
 
 
 const getBaseUrl = () => window.__ENV__?.VITE_API_BASE_URL || '/';
-console.log("test", getBaseUrl());
 
 const getAxiosNoInterceptor = (): AxiosInstance => {
     if (!axiosNoInterceptor) {
