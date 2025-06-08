@@ -16,16 +16,22 @@ interface Member {
     memberType: string;
 }
 
+interface MemberUpdateForm {
+    name: string;
+    nickname: string;
+    phone: string;
+    imageKey: string;
+}
+
 const MemberDetailPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const member = location.state as Member;
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<MemberUpdateForm>({
         name: member.name,
         nickname: member.nickname,
         phone: member.phone,
-        memberType: member.memberType,
         imageKey: "",
     });
 
@@ -36,11 +42,11 @@ const MemberDetailPage = () => {
 
     const handleUpdate = async () => {
         try {
-            await putData("/api/v1/members", form);
+            await putData("/api/v1/members", {...form, memberType: "STUDENT"});
             alert("회원 정보가 수정되었습니다.");
         } catch (err) {
             console.error("수정 실패:", err);
-            alert("수정 실패");
+            alert("회원 정보 수정에 실패했습니다.");
         }
     };
 
@@ -100,7 +106,7 @@ const MemberDetailPage = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">이미지 키 (선택)</label>
+                        <label className="block text-sm font-medium">프로필 이미지 키 (선택)</label>
                         <input
                             name="imageKey"
                             value={form.imageKey}
@@ -111,12 +117,14 @@ const MemberDetailPage = () => {
 
                     <div className="flex gap-4 mt-4">
                         <button
+                            type="button"
                             onClick={handleUpdate}
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                         >
                             수정
                         </button>
                         <button
+                            type="button"
                             onClick={handleDelete}
                             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                         >
