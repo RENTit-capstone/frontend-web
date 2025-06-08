@@ -23,7 +23,9 @@ const UserPage = () => {
         setLoading(true);
         try {
             const res = await getData("/api/v1/admin/members");
-            setUsers(res.data || []);
+            const filteredRes = res.data.filter((r: User) => !r.locked);
+            console.log(filteredRes);
+            setUsers(filteredRes || []);
         } catch (err) {
             console.error("사용자 정보 불러오기 실패:", err);
             setError("사용자 정보를 불러오는 데 실패했습니다.");
