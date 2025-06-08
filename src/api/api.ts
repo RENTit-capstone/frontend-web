@@ -6,7 +6,6 @@ let axiosNoInterceptor: AxiosInstance | null = null;
 
 
 const getBaseUrl = () => window.__ENV__?.VITE_API_BASE_URL || '/';
-console.log("test", getBaseUrl());
 
 const getAxiosNoInterceptor = (): AxiosInstance => {
     if (!axiosNoInterceptor) {
@@ -26,7 +25,6 @@ const getAxiosInstance = (): AxiosInstance => {
         axiosInstance.interceptors.request.use((config) => {
             const token = useAuthStore.getState().accessToken;
             if (token) {
-                //console.log(token);
                 config.headers.Authorization = `Bearer ${token}`;
             }
             config.headers['Content-Type'] = 'application/json';
