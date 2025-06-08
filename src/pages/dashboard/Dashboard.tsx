@@ -23,8 +23,8 @@ const Dashboard = () => {
                 </div>
 
                 {/* 하단 테이블 영역 */}
-                <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-2">
+                <div className="grid grid-cols-2 gap-6">
+                    <div className="col-span-1">
                         <RentalTableCard />
                     </div>
                     <div className="col-span-1">
