@@ -37,27 +37,27 @@ const RentalPage = () => {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
 
-    const fetchRentals = async () => {
-        setLoading(true);
-        try {
-            const query = new URLSearchParams();
-            if (statusFilter) query.append("statuses", statusFilter);
-            query.append("page", page.toString());
-            query.append("size", "10");
-            query.append("sort", "requestDate,desc");
-
-            const data = await getData(`/api/v1/admin/rentals?${query.toString()}`);
-            setRentals(data.data.content || []);
-            setTotalPages(data.data.totalPages || 1);
-        } catch (err) {
-            console.error("대여 데이터 로딩 실패:", err);
-            setError("대여 데이터를 불러오는 데 실패했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchRentals = async () => {
+            setLoading(true);
+            try {
+                const query = new URLSearchParams();
+                if (statusFilter) query.append("statuses", statusFilter);
+                query.append("page", page.toString());
+                query.append("size", "10");
+                query.append("sort", "requestDate,desc");
+
+                const data = await getData(`/api/v1/admin/rentals?${query.toString()}`);
+                setRentals(data.data.content || []);
+                setTotalPages(data.data.totalPages || 1);
+            } catch (err) {
+                console.error("대여 데이터 로딩 실패:", err);
+                setError("대여 데이터를 불러오는 데 실패했습니다.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        
         fetchRentals();
     }, [statusFilter, page]);
 
@@ -71,7 +71,7 @@ const RentalPage = () => {
 
                 {/* 필터 */}
                 <div className="mb-4">
-                    <strong>대여 상태: </strong>
+                    <label>대여 상태: </label>
                     <select
                         value={statusFilter}
                         onChange={(e) => {
@@ -99,12 +99,12 @@ const RentalPage = () => {
                         <table className="w-full text-sm text-left">
                             <thead className="text-gray-500 border-b">
                                 <tr>
-                                    <th className="py-2">번호</th>
+                                    <th className="py-2">대여ID</th>
                                     <th className="py-2">사용자</th>
-                                    <th className="py-2">물품</th>
-                                    <th className="py-2">대여일자</th>
+                                    <th className="py-2">물품명</th>
+                                    <th className="py-2">대여 요청 일자</th>
                                     <th className="py-2">상태</th>
-                                    <th className="py-2">관리</th>
+                                    <th className="py-2">자세히</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -142,7 +142,7 @@ const RentalPage = () => {
                             페이지 {page + 1} / {totalPages}
                         </span>
                         <button
-                            onClick={() => setPage((p) => Math.max(totalPages - 1, p + 1))}
+                            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                             disabled={page >= totalPages - 1}
                             className="px-3 py-1 text-sm border rounded disabled:text-gray-400"
                         >
