@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import Sidebar from "../../components/layout/Sidebar";
 import StatusBadge from "../../components/common/InquiryStatusBadge";
 import InquiryTypeBadge from "../../components/common/InquiryTypeBadge";
+import defaultProfileImg from "../../assets/default_user_profile.png";
 
 interface InquiryDetail {
     inquiryId: number;
@@ -57,10 +58,41 @@ const InquiryDetailPage = () => {
     const fetchMember = async (memberId: number) => {
         try {
             const res = await getData(`/api/v1/admin/members`);
-            
-            setMemberInfo(res.data.find((member: Member) => member.memberId === memberId));
+            const found = res.data.find((member: Member) => member.memberId === memberId);
+
+            if (found) {
+                setMemberInfo(found);
+            } else {
+                setMemberInfo({
+                    memberId,
+                    email: "존재하지 않음",
+                    name: "UNKNOWN",
+                    role: "UNKNOWN",
+                    profileImg: "",
+                    createdAt: "",
+                    locked: true,
+                    nickname: "존재하지 않음",
+                    gender: "-",
+                    studentId: "-",
+                    university: "존재하지 않음"
+                });
+            }
+            console.log("member:", found);
         } catch (err) {
             console.error(`작성자 정보(ID:${memberId}) 조회 실패`, err);
+            setMemberInfo({
+                memberId,
+                email: "존재하지 않음",
+                name: "UNKNOWN",
+                role: "UNKNOWN",
+                profileImg: "",
+                createdAt: "",
+                locked: true,
+                nickname: "존재하지 않음",
+                gender: "-",
+                studentId: "-",
+                university: "존재하지 않음"
+            });
         }
     };
 
@@ -95,16 +127,27 @@ const InquiryDetailPage = () => {
 
                 <div className="bg-white p-4 rounded shadow space-y-4">
                     <div>
+                        <strong>제목:</strong> {detail.title}
+                    </div>
+                    <div>
                         <strong>문의 ID:</strong> {detail.inquiryId}
+                    </div>
+                    <div>
+                        <strong>유형:</strong>
+                        <InquiryTypeBadge type={detail.type} />
+                    </div>
+                    <div>
+                        <strong>처리 상태:</strong>
+                        <StatusBadge processed={detail.processed}/>
                     </div>
                     {memberInfo ? (
                         <div className="border p-4 rounded bg-gray-50 text-sm">
                             <h3 className="font-semibold mb-2">작성자 정보</h3>
                             <div>
                                 <img
-                                    src={memberInfo.profileImg}
+                                    src={memberInfo.profileImg || defaultProfileImg}
                                     alt="profile"
-                                    className="w-14 h-14 rounded-full border"
+                                    className="w-14 h-14 rounded-full border object-cover"
                                 />
                                 <div>
                                     <p><strong>닉네임:</strong> {memberInfo.nickname}</p>
@@ -117,17 +160,6 @@ const InquiryDetailPage = () => {
                     ) : (
                         <p className="text-sm text-gray-400">작성자 정보 불러오는 중...</p>
                     )}
-                    <div>
-                        <strong>유형:</strong>
-                        <InquiryTypeBadge type={detail.type} />
-                    </div>
-                    <div>
-                        <strong>처리 상태:</strong>
-                        <StatusBadge processed={detail.processed}/>
-                    </div>
-                    <div>
-                        <strong>제목:</strong> {detail.title}
-                    </div>
                     <div>
                         <strong>내용:</strong>
                         <p className="whitespace-pre-wrap">{detail.content}</p>
