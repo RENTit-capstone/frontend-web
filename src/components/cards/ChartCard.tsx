@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getData } from '../../api/requests';
-import { translateStatus } from '../common/translateStatus';
+import { translateRentalStatus } from '../common/translateRentalStatus';
 import { RENTAL_STATUS_LIST } from '../common/rentalStatusList';
 
 export type RentalStatus = typeof RENTAL_STATUS_LIST[number];
@@ -71,7 +71,7 @@ const ChartCard = () => {
                             outerRadius={80}
                             dataKey="value"
                             label={({ name, percent }) =>
-                                `${translateStatus(name)} (${(percent * 100).toFixed(0)}%)`
+                                `${translateRentalStatus(name)} (${(percent * 100).toFixed(0)}%)`
                             }
                         >
                             {data.map((entry, index) => (
@@ -82,10 +82,10 @@ const ChartCard = () => {
                             ))}
                         </Pie>
                         <Tooltip
-                            formatter={(value, name) => [value, translateStatus(name as string)]}
+                            formatter={(value, name) => [value, translateRentalStatus(name as string)]}
                         />
                         <Legend
-                            formatter={(value) => translateStatus(value as string)}
+                            formatter={(value) => translateRentalStatus(value as string)}
                         />
                     </PieChart>
                 </ResponsiveContainer>

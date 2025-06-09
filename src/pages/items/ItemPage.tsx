@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import Tag, { StatusTag } from "../../components/common/Tag";
 import { getData } from "../../api/requests";
+import { translateItemStatus } from "../../components/common/translateItemStatus";
 
 interface Item {
     itemId: number;
@@ -14,17 +15,6 @@ interface Item {
     };
     price: number;
 }
-
-const translateStatus = (status: string): StatusTag => {
-    switch (status) {
-        case "AVAILABLE":
-            return "대여가능";
-        case "OUT":
-            return "대여중";
-        default:
-            return "대여가능";
-    }
-};
 
 const ItemPage = () => {
     const [items, setItems] = useState<Item[]>([]);
@@ -136,7 +126,7 @@ const ItemPage = () => {
                                                 {owner.nickname} / {owner.university}
                                             </td>
                                             <td className="py-2">
-                                                <Tag status={translateStatus(status) as StatusTag} />
+                                                <Tag status={translateItemStatus(status) as StatusTag} />
                                             </td>
                                         </tr>
                                     ))}

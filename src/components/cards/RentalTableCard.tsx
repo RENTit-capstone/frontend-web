@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getData } from "../../api/requests";
 import Tag from "../common/Tag";
-import { translateStatus } from '../common/translateStatus';
+import { translateRentalStatus } from '../common/translateRentalStatus';
 import { useNavigate } from 'react-router-dom';
 
 interface Rental {
@@ -76,7 +76,7 @@ const RentalTableCard = () => {
                                 <td className="py-2 font-medium">{itemName}</td>
                                 <td className="py-2">{new Date(requestDate).toLocaleDateString()}</td>
                                 <td className="py-2">
-                                    <Tag status={translateStatus(status)} />
+                                    <Tag status={translateRentalStatus(status)} />
                                 </td>
                             </tr>
                         ))}

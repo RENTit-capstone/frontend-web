@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getData } from "../../api/requests";
 import Sidebar from "../../components/layout/Sidebar";
 import Tag, { StatusTag } from "../../components/common/Tag";
-import { translateStatus } from "../../components/common/translateStatus";
+import { translateRentalStatus } from "../../components/common/translateRentalStatus";
 import dayjs from "dayjs";
 
 interface RentalDetail {
@@ -68,7 +68,7 @@ const RentalDetailPage = () => {
                 <h1 className="text-2xl font-bold mb-4">대여 상세</h1>
                 <div className="bg-white p-4 rounded shadow space-y-3">
                     <div><strong>대여 ID:</strong> {detail.rentalId}</div>
-                    <div><strong>대여 상태:</strong> <Tag status={translateStatus(detail.status) as StatusTag} /></div>
+                    <div><strong>대여 상태:</strong> <Tag status={translateRentalStatus(detail.status) as StatusTag} /></div>
 
                     <div><strong>대여자:</strong> {detail.renterName}</div>
                     <div><strong>소유자:</strong> {detail.ownerName}</div>

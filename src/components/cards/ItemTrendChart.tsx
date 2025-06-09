@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
 import Tag, { StatusTag } from "../../components/common/Tag";
-import { translateStatus } from "../../components/common/translateStatus";
+import { translateItemStatus } from "../common/translateItemStatus";
 
 interface Item {
     itemId: number;
@@ -42,7 +42,7 @@ const RecentItemsCard = () => {
                             <p className="font-medium">{item.name}</p>
                             <p className="text-xs text-gray-500">{dayjs(item.createdAt).format("YYYY.MM.DD")} • {item.category}</p>
                         </div>
-                        <Tag status={translateStatus(item.status) as StatusTag} />
+                        <Tag status={translateItemStatus(item.status) as StatusTag} />
                     </li>
                 ))}
             </ul>
