@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getData } from "../../api/requests";
 import Tag from "../common/Tag";
 import { translateStatus } from '../common/translateStatus';
+import { useNavigate } from 'react-router-dom';
 
 interface Rental {
     rentalId: number;
@@ -12,6 +13,7 @@ interface Rental {
 }
 
 const RentalTableCard = () => {
+    const navigate = useNavigate();
     const [rentals, setRentals] = useState<Rental[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -21,9 +23,9 @@ const RentalTableCard = () => {
             try {
                 setLoading(true);
                 const data = await getData(
-                    `/api/v1/admin/rentals?statuses=APPROVED&statuses=REQUESTED&page=0&size=5&sort=requestDate,desc`
+                    `/api/v1/admin/rentals?page=0&size=5&sort=requestDate,desc`
                 );
-                setRentals(data.content || []);
+                setRentals(data.data.content || []);
             } catch (err) {
                 setError('대여 목록을 불러오지 못했습니다.');
                 console.log("Error occured in fetching rental list: ", err);
@@ -39,7 +41,7 @@ const RentalTableCard = () => {
             {/* 상단 텍스트 + 링크 */}
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">대여 관리</h2>
-                <a href="#" className="text-sm text-blue-500 hover:underline">
+                <a href="/rental" className="text-sm text-blue-500 hover:underline">
                     전체 보기 →
                 </a>
             </div>
@@ -64,7 +66,11 @@ const RentalTableCard = () => {
                     </thead>
                     <tbody>
                         {rentals.map(({ rentalId, itemName, renterName, requestDate, status }) => (
-                            <tr key={rentalId} className="border-b hover:bg-gray-50 text-gray-700">
+                            <tr
+                                key={rentalId}
+                                className="border-b hover:bg-gray-50 text-gray-700 cursor-pointer hover:underline"
+                                onClick={() => navigate(`/rental/${rentalId}`)}
+                            >
                                 <td className="py-2">{rentalId}</td>
                                 <td className="py-2 font-medium">{renterName}</td>
                                 <td className="py-2 font-medium">{itemName}</td>

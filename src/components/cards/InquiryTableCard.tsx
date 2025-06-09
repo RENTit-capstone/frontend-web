@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getData } from "../../api/requests";
+import { useNavigate } from "react-router-dom";
+import StatusBadge from "../common/InquiryStatusBadge";
 
 interface Inquiry {
     inquiryId: number;
@@ -13,6 +15,7 @@ interface Inquiry {
 }
 
 const InquiryTableCard = () => {
+    const navigate = useNavigate();
     const [inquiries, setInquiries] = useState<Inquiry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -38,7 +41,7 @@ const InquiryTableCard = () => {
             {/* 상단 제목 및 링크 */}
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-1g font-semibold">문의 조회</h2>
-                <a href="#" className="text-sm text-blue-500 hover:underline">
+                <a href="/inquiry" className="text-sm text-blue-500 hover:underline">
                     전체 보기 →
                 </a>
             </div>
@@ -56,14 +59,20 @@ const InquiryTableCard = () => {
                             <th className="py-2">번호</th>
                             <th className="py-2">제목</th>
                             <th className="py-2">작성일자</th>
+                            <th className="py-2">상태</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {inquiries.map(({ inquiryId, title, createdAt }) => (
-                            <tr key={inquiryId} className="border-b hover:bg-gray-50">
+                        {inquiries.map(({ inquiryId, title, createdAt, processed }) => (
+                            <tr
+                                key={inquiryId}
+                                className="border-b hover:bg-gray-50 cursor-pointer hover:underline"
+                                onClick={() => navigate(`/inquiry/${inquiryId}`)}
+                            >
                                 <td className="py-2">{inquiryId}</td>
                                 <td className="py-2">{title}</td>
                                 <td className="py-2">{new Date(createdAt).toLocaleDateString()}</td>
+                                <td className="py-2">{<StatusBadge processed={processed} />}</td>
                             </tr>
                         ))}
                     </tbody>
