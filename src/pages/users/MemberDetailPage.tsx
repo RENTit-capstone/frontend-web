@@ -5,7 +5,7 @@ import { deleteData, getData } from "../../api/requests";
 import dayjs from "dayjs";
 import Tag from "../../components/common/Tag";
 import defaultProfileImg from "../../assets/default_user_profile.png"
-import { translateStatus } from "../../components/common/translateStatus";
+import { translateRentalStatus } from "../../components/common/translateRentalStatus";
 
 interface Member {
     memberId: number;
@@ -129,7 +129,7 @@ const MemberDetailPage = () => {
                                     className="cursor-pointer hover:underline"
                                     onClick={() => navigate(`/rental/${r.rentalId}`)}
                                 >
-                                    [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateStatus(r.status)} />
+                                    [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateRentalStatus(r.status)} />
                                 </li>
                             ))}
                         </ul>
@@ -148,7 +148,7 @@ const MemberDetailPage = () => {
                                     className="cursor-pointer hover:underline"
                                     onClick={() => navigate(`/rental/${r.rentalId}`)}
                                 >
-                                    [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateStatus(r.status)} />
+                                    [{dayjs(r.requestDate).format("YYYY-MM-DD")}] {r.itemName} - <Tag status={translateRentalStatus(r.status)} />
                                 </li>
                             ))}
                         </ul>

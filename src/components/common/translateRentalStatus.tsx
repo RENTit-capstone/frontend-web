@@ -1,6 +1,6 @@
 import type { StatusTag } from './Tag'; // Tag.tsx와 동일 경로 기준
 
-export const translateStatus = (status: string): StatusTag => {
+export const translateRentalStatus = (status: string): StatusTag => {
     switch (status) {
         case 'REQUESTED':
             return '대여신청';

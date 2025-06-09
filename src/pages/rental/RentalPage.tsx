@@ -3,7 +3,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import Tag, { StatusTag } from "../../components/common/Tag";
 import { getData } from "../../api/requests";
 import dayjs from "dayjs";
-import { translateStatus } from "../../components/common/translateStatus";
+import { translateRentalStatus } from "../../components/common/translateRentalStatus";
 import { useNavigate } from "react-router-dom";
 
 interface Rental {
@@ -114,7 +114,7 @@ const RentalPage = () => {
                                         <td className="py-2">{renterName}</td>
                                         <td className="py-2">{itemName}</td>
                                         <td className="py-2">{dayjs(requestDate).format("YYYY-MM-DD")}</td>
-                                        <td className="py-2"><Tag status={translateStatus(status) as StatusTag} /></td>
+                                        <td className="py-2"><Tag status={translateRentalStatus(status) as StatusTag} /></td>
                                         <td className="py-2">
                                             <button 
                                                 className="text-blue-500 text-xs hover:underline"
