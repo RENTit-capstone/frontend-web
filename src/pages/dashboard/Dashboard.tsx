@@ -5,8 +5,17 @@ import ItemStateChart from "../../components/cards/ItemStateChart";
 import RentalTableCard from "../../components/cards/RentalTableCard";
 import InquiryTableCard from "../../components/cards/InquiryTableCard";
 import ItemTrendChart from '../../components/cards/ItemTrendChart';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            window.location.reload();
+        }, 60 * 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+    
     return (
         <div className="flex min-h-screen bg-gray-50 text-black">
             <Sidebar />
