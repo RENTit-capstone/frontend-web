@@ -11,6 +11,7 @@ import { JSX, useEffect, useState } from 'react';
 import InquiryDetailPage from './pages/inquiries/InquiryDetailPage';
 import RentalDetailPage from './pages/rental/RentalDetailPage';
 import MemberDetailPage from './pages/users/MemberDetailPage';
+import DevicePage from './pages/device/DevicePage';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const { accessToken } = useAuthStore();
@@ -43,6 +44,7 @@ function App() {
                 <Route path="/items" element={<ProtectedRoute><ItemPage /></ProtectedRoute>} />
                 <Route path="/inquiry" element={<ProtectedRoute><InquiryPage /></ProtectedRoute>} />
                 <Route path="/user" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+                <Route path="/device" element={<ProtectedRoute><DevicePage /></ProtectedRoute>} />
                 <Route path="/inquiry/:id" element={<ProtectedRoute><InquiryDetailPage /></ProtectedRoute>} />
                 <Route path="/rental/:id" element={<ProtectedRoute><RentalDetailPage /></ProtectedRoute>} />
                 <Route path="/user/:id" element={<ProtectedRoute><MemberDetailPage /></ProtectedRoute>} />
