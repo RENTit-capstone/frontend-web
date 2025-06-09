@@ -4,6 +4,7 @@ import ChartCard from "../../components/cards/ChartCard";
 import ItemStateChart from "../../components/cards/ItemStateChart";
 import RentalTableCard from "../../components/cards/RentalTableCard";
 import InquiryTableCard from "../../components/cards/InquiryTableCard";
+import ItemTrendChart from '../../components/cards/ItemTrendChart';
 
 const Dashboard = () => {
     return (
@@ -19,7 +20,8 @@ const Dashboard = () => {
                 {/* 중간 통계 영역 */}
                 <div className="flex gap-4 mb-6">
                     <div className="w-1/2"><ChartCard /></div>
-                    <div className="w-1/2"><ItemStateChart /></div>
+                    <div className="w-1/4"><ItemStateChart /></div>
+                    <div className="w-1/4"><ItemTrendChart /></div>
                 </div>
 
                 {/* 하단 테이블 영역 */}

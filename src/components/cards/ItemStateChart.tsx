@@ -54,22 +54,30 @@ const ItemStateChart = () => {
                 </a>
             </div>
             
-            <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex justify-between">
-                    <span>대여 가능</span>
-                    <span className="font-semibold text-green-600">{stats.available}개</span>
+            <ul className="grid grid-cols-1 gap-2 text-sm text-gray-800 gap-8">
+                <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                    ✅ <span>대여 가능</span>
+                    </span>
+                    <span className="text-green-600 font-semibold">{stats.available}개</span>
                 </li>
-                <li className="flex justify-between">
-                    <span>대여 중</span>
-                    <span className="font-semibold text-blue-600">{stats.out}개</span>
+                <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                    📦 <span>대여 중</span>
+                    </span>
+                    <span className="text-blue-600 font-semibold">{stats.out}개</span>
                 </li>
-                <li className="flex justify-between">
-                    <span>오늘 등록</span>
-                    <span className="font-semibold text-purple-600">{stats.today}개</span>
+                <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                    🆕 <span>오늘 등록</span>
+                    </span>
+                    <span className="text-purple-600 font-semibold">{stats.today}개</span>
                 </li>
-                <li className="flex justify-between">
-                    <span>전체 물품</span>
-                    <span className="font-semibold text-gray-800">{stats.total}개</span>
+                <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                    📊 <span>전체 물품</span>
+                    </span>
+                    <span className="text-gray-800 font-semibold">{stats.total}개</span>
                 </li>
             </ul>
         </div>
