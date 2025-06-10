@@ -6,7 +6,8 @@ import {
     MessageSquare,
     BarChart2,
     RefreshCw,
-    ExternalLink
+    ExternalLink,
+    Server
 } from 'lucide-react';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -15,11 +16,12 @@ import logoSrc from '../../assets/RENTit_logo.svg';
 const getMonitoringUrl = () => window.__ENV__?.VITE_MONITORING_URL;
 
 const menuItems = [
-    { label: '홈', icon: <Home size={18} />, path: '/' },
+    { label: '홈', icon: <Home size={18} />, path: '/dashboard' },
     { label: '대여관리', icon: <ClipboardList size={18} />, path: '/rental' },
     { label: '물품관리', icon: <Box size={18} />, path: '/items' },
     { label: '문의', icon: <MessageSquare size={18} />, path: '/inquiry' },
     { label: '사용자 통계', icon: <BarChart2 size={18} />, path: '/user' },
+    { label: '키오스크 관리', icon: <Server size={18} />, path: '/device' },
 ];
 
 const Sidebar = () => {
