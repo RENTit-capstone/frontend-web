@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import { getData } from "../../api/requests";
+import { useNavigate } from "react-router-dom";
 
 interface Device {
     deviceId: number;
@@ -9,6 +10,7 @@ interface Device {
 }
 
 const DevicePage = () => {
+    const navigate = useNavigate();
     const [devices, setDevices] = useState<Device[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -34,7 +36,7 @@ const DevicePage = () => {
         <div className="flex min-h-screen bg-gray-50 text-black">
             <Sidebar />
             <main className="flex-1 p-6">
-                <h1 className="text-2xl font-bold mb-6">사물함 기기 관리</h1>
+                <h1 className="text-2xl font-bold mb-6">키오스크 관리</h1>
 
                 <div className="bg-white p-4 rounded shadow">
                     {loading ? (
@@ -42,7 +44,7 @@ const DevicePage = () => {
                     ) : error ? (
                         <p className="text-sm text-red-500">{error}</p>
                     ) : devices.length === 0 ? (
-                        <p className="text-sm text-gray-500">등록된 기기가 없습니다.</p>
+                        <p className="text-sm text-gray-500">등록된 키오스크가 없습니다.</p>
                     ) : (
                         <table className="w-full text-sm text-left">
                             <thead className="text-gray-500 border-b">
@@ -50,6 +52,7 @@ const DevicePage = () => {
                                     <th className="py-2 px-2">기기 ID</th>
                                     <th className="py-2 px-2">대학교</th>
                                     <th className="py-2 px-2">설치 위치</th>
+                                    <th className="py-2 px-2">자세히 보기</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,6 +61,17 @@ const DevicePage = () => {
                                         <td className="py-2 px-2">{device.deviceId}</td>
                                         <td className="py-2 px-2">{device.university}</td>
                                         <td className="py-2 px-2">{device.locationDescription}</td>
+                                        <td className="py-2 px-2">
+                                            <button
+                                                className="text-blue-500 text-xs hover:underline"
+                                                key={device.deviceId}
+                                                onClick={() => {
+                                                    navigate(`/device/${device.deviceId}`);
+                                                }}
+                                            >
+                                                자세히 보기
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
